@@ -17,15 +17,24 @@ class DocumentLoader:
             raise FileNotFoundError(f"File not found: {path}")
         documents = []
         
-        for file in path.iterdir():
-            if file.is_file() and file.suffix == ".md":
-                content = file.read_text(encoding="utf-8")
-                doc = Document(
-                    title=self._extract_title(content, file.stem),
-                    source=file.name,
-                    content=content
-                )
-                documents.append(doc)
+        if path.is_dir():
+            for file in path.iterdir():
+                if file.is_file() and file.suffix == ".md":
+                    content = file.read_text(encoding="utf-8")
+                    doc = Document(
+                        title=self._extract_title(content, file.stem),
+                        source=file.name,
+                        content=content
+                    )
+                    documents.append(doc)
+        else:
+            content = path.read_text(encoding="utf-8")
+            doc = Document(
+                title=self._extract_title(content, path.stem),
+                source=path.name,
+                content=content
+            )
+            documents.append(doc)
         return documents
     
     def _extract_title(self, content: str, fallback: str) -> str:

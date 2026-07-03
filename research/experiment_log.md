@@ -27,3 +27,29 @@ Editable installation works.
 ## Next
 
 Implement the Document Loader.
+
+# Experiment 002 — Markdown Chunker
+
+Status: ✅ Passed
+
+Dataset:
+- Docker
+- FastAPI
+- Python
+
+Observation:
+Each document produced a single chunk because the dataset only contains one top-level heading.
+
+Conclusion:
+The parser behaves as designed.
+A larger Markdown document is needed to evaluate heading-based chunking.
+
+## Experiment 002
+
+Status: Partial Success
+
+Observation:
+The parser correctly splits on H1 headings but ignores H2-H6 headings.
+
+Next Action:
+Generalize heading detection to all Markdown heading levels.
