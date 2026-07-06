@@ -18,7 +18,7 @@ from retrievlab.chunking.markdown import MarkdownChunker
 loader = DocumentLoader()
 chunker = MarkdownChunker()
 
-documents = loader.load(Path("data/raw/big_fastapi.md"))
+documents = loader.load(Path("data/raw/"))
 chunks = chunker.chunk(documents[0])  # Chunk the first document for demonstration
 
 print(f"\nLoaded {len(documents)} documents")

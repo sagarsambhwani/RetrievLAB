@@ -34,7 +34,7 @@ class MarkdownChunker:
         current_heading = None
 
         for line in document.content.splitlines():
-            if line.startswith("# "):
+            if line.lstrip().startswith("#"):
                 # If we encounter a new heading, save the current chunk
                 if current_chunk:
                     chunks.append(Chunk(
