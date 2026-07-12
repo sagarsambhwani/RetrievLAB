@@ -8,6 +8,7 @@ Expected Result:
 """
 
 from pathlib import Path
+from math import sqrt
 
 from retrievlab.ingestion.loader import DocumentLoader
 from retrievlab.chunking.markdown import MarkdownChunker
@@ -28,9 +29,17 @@ for document in documents:
     chunks.extend(chunker.chunk(document))
 
 embedded_chunks = embedder.embed(chunks)
+vector = embedded_chunks[0].embedding
+
+norm = sqrt(sum(x**2 for x in vector))
+print(f"\nNorm of the first chunk's embedding: {norm}")
+
+
+print(chunks[0].embedding[:5])
 
 search_results = retriever.retrieve(query="What is FastAPI?", top_k=5, chunks=embedded_chunks)
 print(f"\nRetrieved {len(search_results)} results for the query 'What is FastAPI?'\n")
+print(chunks[0].embedding[:5])
 
 for i, result in enumerate(search_results, start=1):
     print(f"Result {i}")
