@@ -5,6 +5,7 @@ Question:
 Does the Retriever correctly retrieve relevant Markdown chunks based on a query using the FastEmbed model?
 Expected Result:
 - The Retriever should return the top k relevant chunks based on the query.
+
 """
 
 from pathlib import Path

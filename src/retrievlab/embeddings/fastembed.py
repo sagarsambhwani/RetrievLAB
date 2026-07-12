@@ -1,3 +1,7 @@
+"""
+A client for generating embeddings using the FastEmbed model.
+"""
+
 from retrievlab.embeddings.client import EmbeddingClient
 from fastembed import TextEmbedding
 

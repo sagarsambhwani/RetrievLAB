@@ -1,3 +1,6 @@
+"""
+Data models for representing documents, chunks, queries, and search results.
+"""
 from __future__ import annotations
 
 from typing import Any

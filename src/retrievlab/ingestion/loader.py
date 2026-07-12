@@ -1,3 +1,7 @@
+"""
+A module for loading documents from a specified path.
+"""
+
 from pathlib import Path
 from retrievlab.models import Document
 

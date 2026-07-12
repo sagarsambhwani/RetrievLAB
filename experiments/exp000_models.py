@@ -1,3 +1,12 @@
+"""
+Experiment: 000
+
+Question:
+Does the model correctly represent the Document, Chunk, Query, and SearchResult classes?
+Expected Result:
+- The model should correctly instantiate and display the attributes of each class.
+"""
+
 from retrievlab.models import Document, Chunk, Query, SearchResult
 
 doc = Document(

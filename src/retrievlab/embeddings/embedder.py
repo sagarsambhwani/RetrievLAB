@@ -1,3 +1,8 @@
+"""
+A class for embedding chunks of text using a specified embedding model.
+
+"""
+
 from retrievlab.models import Chunk
 from retrievlab.embeddings.client import EmbeddingClient
 

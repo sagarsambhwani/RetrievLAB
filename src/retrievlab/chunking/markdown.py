@@ -1,16 +1,18 @@
-# Algorithm
+"""
+Algorithm
 
-# 1. Read the document line by line.
+1. Read the document line by line.
 
-# 2. If a heading is encountered:
-#    - Save the previous chunk.
-#    - Start a new chunk with this heading.
+2. If a heading is encountered:
+   - Save the previous chunk.
+   - Start a new chunk with this heading.
 
-# 3. Otherwise:
-#    - If we've seen a heading, append the line to the current chunk.
-#    - Otherwise, append the line to the preamble.
+3. Otherwise:
+   - If we've seen a heading, append the line to the current chunk.
+   - Otherwise, append the line to the preamble.
 
-# 4. At the end of the document, save the remaining chunk.
+4. At the end of the document, save the remaining chunk.
+"""
 
 from retrievlab.models import Document, Chunk
 

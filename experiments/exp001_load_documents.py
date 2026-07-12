@@ -1,3 +1,12 @@
+"""
+Experiment: 001
+
+Question: Do the documents load correctly from the specified path?
+
+Expected Result:
+- The DocumentLoader should load all documents from the specified path.
+"""
+
 from pathlib import Path
 
 from retrievlab.ingestion.loader import DocumentLoader

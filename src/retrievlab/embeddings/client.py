@@ -1,3 +1,7 @@
+"""
+Interface for embedding backends.
+"""
+
 from abc import ABC, abstractmethod
 
 class EmbeddingClient(ABC):

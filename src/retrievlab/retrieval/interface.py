@@ -1,3 +1,6 @@
+"""
+Interface for retrieval backends.
+"""
 from abc import ABC, abstractmethod
 
 class Retriever(ABC):

@@ -21,5 +21,9 @@ class DenseRetriever(Retriever):
         return search_results
 
     def similarity(self, embedding1: list[float], embedding2: list[float]) -> float:
+        """
+        FastEmbed returns unit-normalized embeddings,
+        so dot product is equivalent to cosine similarity.
+        """
         # Implement a method to calculate similarity between two embeddings.
         return sum(a * b for a, b in zip(embedding1, embedding2))
