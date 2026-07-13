@@ -1,3 +1,7 @@
+"""
+A module for performing dense retrieval using embeddings.
+"""
+
 from retrievlab.retrieval.interface import Retriever
 from retrievlab.embeddings.client import EmbeddingClient
 from retrievlab.models import Chunk, SearchResult
