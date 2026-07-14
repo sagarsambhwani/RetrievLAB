@@ -10,7 +10,7 @@ from pydantic import BaseModel, Field
 
 
 class Document(BaseModel):
-    id: str = Field(default_factory=lambda: str(uuid4()))
+    id: str
     title: str
     source: str
     content: str
