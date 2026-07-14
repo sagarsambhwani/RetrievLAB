@@ -1,0 +1,4 @@
+{
+    "query": "What is FastAPI?",
+    "relevant_chunk_ids": ["big_fastapi.md:1", "fastapi.md:1"]
+}
