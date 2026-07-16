@@ -16,7 +16,7 @@ from retrievlab.chunking.markdown import MarkdownChunker
 from retrievlab.embeddings.embedder import Embedder
 from retrievlab.embeddings.fastembed import FastEmbedClient
 from retrievlab.retrieval.dense import DenseRetriever
-from retrievlab.evaluation.metrics import recall
+from retrievlab.evaluation.metrics import recall, reciprocal_rank
 from retrievlab.evaluation.benchmark import BenchmarkCase
 
 
@@ -40,7 +40,7 @@ with benchmark_path.open("r") as file:
     data = json.load(file)
 
 cases = [BenchmarkCase(**item) for item in data]
-
+scores = []
 for case in cases:
     results = retriever.retrieve(
         query=case.query,
@@ -51,7 +51,13 @@ for case in cases:
     retrieved_results=results,
     expected_results=case,
     )
+    scores.append(reciprocal_rank(
+        retrieved_results=results,
+        expected_results=case
+    ))
     print(f"\nQuery: {case.query}")
     print(f"Expected Relevant Chunk IDs: {case.relevant_chunk_ids}")
     print(f"Retrieved Chunk IDs: {[result.chunk.id for result in results]}")
     print(f"Recall Score: {score}")
+    print(f"Reciprocal Rank Score: {scores[-1]}")
+print(f"\nMean Reciprocal Rank: {sum(scores)/len(scores)}")
