@@ -36,5 +36,6 @@ for document in documents:
 
     for i, chunk in enumerate(chunks, start=1):
         print(f"\nChunk {i}")
+        print(f"Chunk ID: {chunk.id}")
         print(f"Heading: {chunk.metadata['heading']}")
-        print(chunk.text, chunk.embedding)
+        print(chunk.text, chunk.embedding[:5])  # Print first 5 dimensions of the embedding vector

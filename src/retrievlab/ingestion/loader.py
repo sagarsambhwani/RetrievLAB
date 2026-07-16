@@ -26,6 +26,7 @@ class DocumentLoader:
                 if file.is_file() and file.suffix == ".md":
                     content = file.read_text(encoding="utf-8")
                     doc = Document(
+                        id=file.name,
                         title=self._extract_title(content, file.stem),
                         source=file.name,
                         content=content
@@ -34,6 +35,7 @@ class DocumentLoader:
         else:
             content = path.read_text(encoding="utf-8")
             doc = Document(
+                id=path.name,
                 title=self._extract_title(content, path.stem),
                 source=path.name,
                 content=content

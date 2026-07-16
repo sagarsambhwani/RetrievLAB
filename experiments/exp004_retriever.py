@@ -44,5 +44,6 @@ print(chunks[0].embedding[:5])
 
 for i, result in enumerate(search_results, start=1):
     print(f"Result {i}")
+    print(f"Chunk ID: {result.chunk.id}")
     print(f"Chunk: {result.chunk.text}")
     print(f"Score: {result.score}")

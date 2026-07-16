@@ -40,6 +40,7 @@ class MarkdownChunker:
                 # If we encounter a new heading, save the current chunk
                 if current_chunk:
                     chunks.append(Chunk(
+                        id=f"{document.id}:{len(chunks)+1}",
                         document_id=document.id,
                         text="\n".join(current_chunk),
                         metadata={"heading": current_heading or "Preamble"}
@@ -54,6 +55,7 @@ class MarkdownChunker:
         # Add the last chunk if it exists
         if current_chunk:
             chunks.append(Chunk(
+                id=f"{document.id}:{len(chunks)+1}",
                 document_id=document.id,
                 text="\n".join(current_chunk),
                 metadata={"heading": current_heading or "Preamble"}

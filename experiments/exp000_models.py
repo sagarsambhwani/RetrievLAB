@@ -10,6 +10,7 @@ Expected Result:
 from retrievlab.models import Document, Chunk, Query, SearchResult
 
 doc = Document(
+    id="fastapi.md",
     title="FastAPI",
     source="fastapi.md",
     content="FastAPI is a modern, high-performance web framework."

@@ -34,5 +34,6 @@ for document in documents:
 
     for i, chunk in enumerate(chunks, start=1):
         print(f"\nChunk {i}")
+        print(f"Chunk ID: {chunk.id}")
         print(f"Heading: {chunk.metadata['heading']}")
         print(chunk.text)

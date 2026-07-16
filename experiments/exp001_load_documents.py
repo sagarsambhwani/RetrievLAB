@@ -21,7 +21,8 @@ for i, document in enumerate(documents, start=1):
     print("=" * 60)
     print(f"Document {i}")
     print("=" * 60)
+    print(f"ID      : {document.id}")
     print(f"Title   : {document.title}")
     print(f"Source  : {document.source}")
-    print(f"Content :\n{document.content}")
+    print(f"Content :\n{document.content[:50]}...")  # Print first 50 characters of content
     print()
