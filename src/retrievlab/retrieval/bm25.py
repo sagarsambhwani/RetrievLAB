@@ -12,7 +12,8 @@ class BM25Retriever(Retriever):
     def _tokenize(self, text: str) -> list[str]:
         return re.findall(r"\b\w+\b", text.lower())
 
-    def index(self, chunks: list[Chunk]): -> None
+    def index(self, chunks: list[Chunk]) -> None:
+        """Build BM25 corpus statistics from the provided chunks."""
         self.term_frequencies.clear()
         self.chunk_lengths.clear()
         self.average_chunk_length = 0
