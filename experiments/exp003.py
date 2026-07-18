@@ -18,10 +18,13 @@ for doc in docs:
 print(f"chunks loaded successfully: {len(chunks)}")
 print(f"chunk[0]: {chunks[0]}")
 
-results = retriever.index(chunks)
+indexed = retriever.index(chunks)
 print(f"results from bm25 retriever: {retriever.chunk_lengths, retriever.average_chunk_length}")
 # print(f"term frequncies: {retriever.term_frequencies}")
 for token in ["fastapi", "python", "docker", "framework"]:
     df = len(retriever.term_frequencies.get(token, {}))
     idf = retriever._inverse_document_frequency(token)
     print(f"{token:10} df={df} idf={idf:.3f}")
+
+results = retriever.retrieve(query="What is a fastapi?", top_k=5, chunks=chunks)
+print(f"results: {results}")
