@@ -1,4 +1,5 @@
 import re
+import math
 
 from retrievlab.retrieval.interface import Retriever
 from retrievlab.models import Chunk, SearchResult
@@ -29,7 +30,19 @@ class BM25Retriever(Retriever):
                 self.term_frequencies[token][chunk.id]+=1
         self.average_chunk_length = (sum(self.chunk_lengths.values())/ len(self.chunk_lengths) if self.chunk_lengths
         else 0)
-                
+
+    def _inverse_document_frequency(self, token: str) -> float:
+        N = len(self.chunk_lengths)
+        df = len(self.term_frequencies.get(token, {}))
+
+        if df == 0:
+            return 0.0
+
+        return math.log(N / df)
+
     def retrieve(self, query: str, top_k: int, chunks: list[Chunk]) -> list[SearchResult]:
 
-        return []
+        query_tokens = self._tokenize(query)
+        scores = [(self.bm25_score(query_tokens, chunk), chunk) for chunk in chunks]
+        top_scores = sorted(scores, key=lambda x: x[0], reverse=True)[:top_k]
+        return [SearchResult(chunk=chunk, score=score) for score, chunk in top_scores]
