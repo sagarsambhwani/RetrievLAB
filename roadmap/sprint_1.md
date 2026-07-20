@@ -55,10 +55,10 @@ Complete the BM25 implementation and ensure it behaves consistently across diffe
 - [x] Inverse Document Frequency
 - [x] BM25 Scoring
 - [x] Retrieval Logic
-- [ ] Unit Tests
-- [ ] Edge Case Testing
-- [ ] Performance Review
-- [ ] Code Cleanup
+- [x] Unit Tests
+- [x] Edge Case Testing
+- [x] Performance Review
+- [x] Code Cleanup
 
 ### Acceptance Criteria
 
