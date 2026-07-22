@@ -72,6 +72,9 @@ Complete the BM25 implementation and ensure it behaves consistently across diffe
 
 **2 Hours**
 
+### Current Limitations: 
+The baseline BM25 implementation uses simple tokenization without stemming, lemmatization, or stopword removal. These preprocessing techniques will be evaluated in future experiments to improve lexical matching.
+
 ---
 
 ## 🎟️ RLB-002 — Review Dense Retriever
@@ -84,21 +87,30 @@ Review the existing Dense Retriever implementation to ensure it follows the same
 
 ### Tasks
 
-- [ ] Review embedding generation
-- [ ] Verify cosine similarity implementation
-- [ ] Improve documentation
-- [ ] Verify interface consistency
-- [ ] Add tests
+- [x] Review embedding generation
+- [x] Verify cosine similarity implementation
+- [x] Improve documentation
+- [x] Verify interface consistency
+- [x] Add tests
 
 ### Acceptance Criteria
 
-- Retrieval quality is verified.
-- Documentation is complete.
-- Matches Retriever interface.
+- ✅ Retrieval quality is verified.
+- ✅ Documentation is complete.
+- ✅ Matches Retriever interface.
 
 ### Estimated Effort
 
 **2 Hours**
+
+### Completed Work
+
+- Added comprehensive class and method docstrings (Google style)
+- Renamed `similarity()` to `_similarity()` for proper encapsulation
+- Added validation for embedding dimensions with descriptive errors
+- Added error handling for missing embeddings
+- Created 8 unit tests covering all edge cases and interface compliance
+- All tests passing
 
 ---
 
@@ -414,7 +426,7 @@ Improve maintainability before introducing additional retrieval techniques.
 
 | Epic | Status |
 |-------|--------|
-| Retrieval Foundations | 🟡 In Progress |
+| Retrieval Foundations | ✅ Complete |
 | Benchmark Infrastructure | ⚪ Planned |
 | Evaluation Framework | ⚪ Planned |
 | Experiments | ⚪ Planned |
