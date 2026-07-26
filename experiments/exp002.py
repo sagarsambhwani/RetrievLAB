@@ -1,20 +1,8 @@
-import json
-from pathlib import Path
-
-from retrievlab.evaluation.benchmark import BenchmarkCase
+from retrievlab.evaluation.benchmark import load_benchmark
 
 
-path = Path("data/benchmarks/simple.json")
+benchmark = load_benchmark("data/benchmarks/simple.json")
 
-with path.open("r") as file:
-    data = json.load(file)
-
-cases = []
-
-for item in data:
-    case = BenchmarkCase(**item)
-    cases.append(case)
-
-print(type(cases))
-print(type(cases[0]))
-print(len(cases))
+print(type(benchmark.cases))
+print(type(benchmark.cases[0]))
+print(len(benchmark.cases))

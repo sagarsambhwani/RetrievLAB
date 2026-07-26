@@ -10,14 +10,13 @@ Expected Result:
 - Metrics should match expected intuition, and unknown terms should return zero score.
 """
 
-import json
 from pathlib import Path
 
 from retrievlab.ingestion.loader import DocumentLoader
 from retrievlab.chunking.markdown import MarkdownChunker
 from retrievlab.retrieval.bm25 import BM25Retriever
 from retrievlab.evaluation.metrics import recall, reciprocal_rank
-from retrievlab.evaluation.benchmark import BenchmarkCase
+from retrievlab.evaluation.benchmark import load_benchmark
 
 
 def run_experiment():
@@ -43,12 +42,8 @@ def run_experiment():
     print(f"Indexed corpus. Average chunk length: {retriever.average_chunk_length:.2f} tokens.")
 
     # Load benchmark dataset
-    benchmark_path = Path("data/benchmarks/simple.json")
-    with benchmark_path.open("r", encoding="utf-8") as f:
-        benchmark_data = json.load(f)
-    
-    cases = [BenchmarkCase(**item) for item in benchmark_data]
-    print(f"Loaded {len(cases)} benchmark cases from {benchmark_path}\n")
+    benchmark = load_benchmark("data/benchmarks/simple.json")
+    print(f"Loaded {len(benchmark.cases)} benchmark cases from data/benchmarks/simple.json\n")
 
     recalls = []
     rrs = []
@@ -56,7 +51,7 @@ def run_experiment():
     print(f"{'Query':<45} | {'Expected':<25} | {'Top-1 Retrieved (Score)':<25} | {'Recall@5':<8} | {'MRR':<8}")
     print("-" * 118)
 
-    for case in cases:
+    for case in benchmark.cases:
         results = retriever.retrieve(
             query=case.query,
             top_k=5,
