@@ -140,20 +140,48 @@ relevant_chunks:
 
 ### Tasks
 
-- [ ] Create benchmark schema
-- [ ] Validate schema
-- [ ] Create example benchmark
+- [x] Create benchmark schema
+- [x] Validate schema
+- [x] Create example benchmark
 
 ### Deliverable
 
 ```
 benchmarks/
-    simple.yaml
+    simple.json
 ```
 
 ### Estimated Effort
 
 **1 Hour**
+
+### Change in Decision
+
+We will use JSON instead of YAML for benchmarks because JSON benchmark structures were already present in the codebase and are easier to work with.
+
+### Deliverable Changed
+
+```json
+{
+    "query": "What is FastAPI?",
+    "relevant_chunks": [
+        "fastapi.md:1"
+    ]
+}
+```
+
+we will use the same 
+
+Schema used:
+
+Benchmark Case
+
+- query: str
+- relevant_chunk_ids: list[str]
+
+Benchmark
+
+- cases: list[BenchmarkCase]  ->  list of BenchmarkCase objects
 
 ---
 
@@ -167,9 +195,9 @@ Implement a loader that converts benchmark files into Python objects.
 
 ### Tasks
 
-- [ ] Load YAML benchmark
-- [ ] Validate required fields
-- [ ] Return Benchmark object
+- [x] Load JSON benchmark
+- [x] Validate required fields
+- [x] Return Benchmark object
 
 ### Acceptance Criteria
 
@@ -178,6 +206,16 @@ Benchmark files load without manual parsing.
 ### Estimated Effort
 
 **2 Hours**
+
+### Delivered
+
+we added json schema for benchmarks
+
+we added example benchmark in benchmarks/simple.json
+
+we added benchmark loader that converts benchmark files into Python objects
+
+now we can load benchmarks using load_benchmark function
 
 ---
 
@@ -198,6 +236,17 @@ Create strongly typed benchmark models.
 ### Estimated Effort
 
 **1 Hour**
+
+### Schema Implemented
+
+Benchmark Case
+
+- query: str
+- relevant_chunk_ids: list[str]
+
+Benchmark
+
+- cases: list[BenchmarkCase]  ->  list of BenchmarkCase objects
 
 ---
 
@@ -427,7 +476,7 @@ Improve maintainability before introducing additional retrieval techniques.
 | Epic | Status |
 |-------|--------|
 | Retrieval Foundations | ✅ Complete |
-| Benchmark Infrastructure | ⚪ Planned |
+| Benchmark Infrastructure | ✅ Complete |
 | Evaluation Framework | ⚪ Planned |
 | Experiments | ⚪ Planned |
 | Cleanup | ⚪ Planned |
