@@ -15,7 +15,7 @@ from retrievlab.chunking.markdown import MarkdownChunker
 from retrievlab.embeddings.embedder import Embedder
 from retrievlab.embeddings.fastembed import FastEmbedClient
 from retrievlab.retrieval.dense import DenseRetriever
-from retrievlab.evaluation.metrics import recall, reciprocal_rank
+from retrievlab.evaluation.metrics import recall_at_k, reciprocal_rank
 from retrievlab.evaluation.benchmark import load_benchmark
 
 
@@ -42,9 +42,10 @@ for case in benchmark.cases:
         top_k=5,
         chunks=embedded_chunks,
     )
-    score = recall(
-    retrieved_results=results,
-    expected_results=case,
+    score = recall_at_k(
+        retrieved_results=results,
+        expected_results=case,
+        k=5,
     )
     scores.append(reciprocal_rank(
         retrieved_results=results,
