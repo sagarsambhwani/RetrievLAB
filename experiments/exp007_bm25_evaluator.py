@@ -15,7 +15,7 @@ from pathlib import Path
 from retrievlab.ingestion.loader import DocumentLoader
 from retrievlab.chunking.markdown import MarkdownChunker
 from retrievlab.retrieval.bm25 import BM25Retriever
-from retrievlab.evaluation.metrics import recall, reciprocal_rank
+from retrievlab.evaluation.metrics import recall_at_k, reciprocal_rank
 from retrievlab.evaluation.benchmark import load_benchmark
 
 
@@ -58,7 +58,7 @@ def run_experiment():
             chunks=chunks,
         )
         
-        rec_score = recall(retrieved_results=results, expected_results=case)
+        rec_score = recall_at_k(retrieved_results=results, expected_results=case, k=5)
         rr_score = reciprocal_rank(retrieved_results=results, expected_results=case)
         
         recalls.append(rec_score)
