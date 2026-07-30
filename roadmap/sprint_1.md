@@ -264,10 +264,10 @@ Measure retrieval quality instead of relying on intuition.
 
 ### Tasks
 
-- [ ] Recall@1
-- [ ] Recall@3
-- [ ] Recall@5
-- [ ] Recall@10
+- [x] Recall@1
+- [x] Recall@3
+- [x] Recall@5
+- [x] Recall@10
 
 ### Acceptance Criteria
 
@@ -289,8 +289,8 @@ Measure ranking quality by considering the first relevant retrieved chunk.
 
 ### Tasks
 
-- [ ] Reciprocal Rank
-- [ ] Mean Reciprocal Rank
+- [x] Reciprocal Rank
+- [x] Mean Reciprocal Rank
 
 ### Estimated Effort
 
@@ -304,9 +304,9 @@ Measure ranking quality by considering the first relevant retrieved chunk.
 
 ### Tasks
 
-- [ ] Precision@1
-- [ ] Precision@5
-- [ ] Precision@10
+- [x] Precision@1
+- [x] Precision@5
+- [x] Precision@10
 
 ### Estimated Effort
 
@@ -321,6 +321,12 @@ Measure ranking quality by considering the first relevant retrieved chunk.
 ### Description
 
 Generate a simple evaluation summary after running benchmarks.
+
+### Tasks
+
+- [x] Evaluation report models (`RetrieverEvaluationResult`, `EvaluationReport`)
+- [x] Markdown table formatting (`to_markdown`)
+- [x] Retriever evaluator (`evaluate_retriever`)
 
 ### Example Output
 
@@ -477,8 +483,8 @@ Improve maintainability before introducing additional retrieval techniques.
 |-------|--------|
 | Retrieval Foundations | ✅ Complete |
 | Benchmark Infrastructure | ✅ Complete |
-| Evaluation Framework | ⚪ Planned |
-| Experiments | ⚪ Planned |
+| Evaluation Framework | ✅ Complete |
+| Experiments | 🚧 In Progress |
 | Cleanup | ⚪ Planned |
 
 ---
