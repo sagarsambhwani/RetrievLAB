@@ -55,3 +55,19 @@ def test_invalid_k(sample_results, sample_case):
 
     with pytest.raises(ValueError):
         precision_at_k(sample_results, sample_case, k=-1)
+
+def test_reciprocal_rank(sample_results, sample_case):
+    # First item (chunk1) is relevant -> rank 1 -> RR = 1.0
+    rr_first = reciprocal_rank(sample_results, sample_case)
+    assert rr_first == 1.0
+
+    # Rank 2 item (chunk2) relevant, rank 1 (chunk3) irrelevant -> rank 2 -> RR = 0.5
+    c2 = Chunk(id="chunk3", document_id="doc1", text="content 3")
+    c3 = Chunk(id="chunk2", document_id="doc1", text="content 2")
+    rank2_results = [SearchResult(chunk=c2, score=0.9), SearchResult(chunk=c3, score=0.8)]
+    assert reciprocal_rank(rank2_results, sample_case) == 0.5
+
+    # No relevant items retrieved -> RR = 0.0
+    c_none = Chunk(id="chunk99", document_id="doc1", text="content 99")
+    no_match_results = [SearchResult(chunk=c_none, score=0.9)]
+    assert reciprocal_rank(no_match_results, sample_case) == 0.0
