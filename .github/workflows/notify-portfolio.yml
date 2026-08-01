@@ -10,12 +10,10 @@ jobs:
     steps:
       - name: Trigger Portfolio Workflow
         env:
-          PORTFOLIO_PAT: ${{ secrets.PORTFOLIO_PAT }}
           PROFILE_TOKEN: ${{ secrets.PROFILE_TOKEN }}
         run: |
-          TOKEN="${PORTFOLIO_PAT:-$PROFILE_TOKEN}"
           curl -f -X POST \
-            -H "Authorization: Bearer ${TOKEN}" \
+            -H "Authorization: Bearer ${PROFILE_TOKEN}" \
             -H "Accept: application/vnd.github+json" \
             https://api.github.com/repos/sagarsambhwani/sagarsambhwani/dispatches \
             -d '{"event_type": "update-portfolio"}'
