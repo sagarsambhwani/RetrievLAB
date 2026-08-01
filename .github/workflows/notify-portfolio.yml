@@ -9,9 +9,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Trigger Portfolio Workflow
+        env:
+          PORTFOLIO_PAT: ${{ secrets.PORTFOLIO_PAT }}
+          PROFILE_TOKEN: ${{ secrets.PROFILE_TOKEN }}
         run: |
-          TOKEN="${{ secrets.PORTFOLIO_PAT || secrets.PROFILE_TOKEN || secrets.GH_PAT }}"
-          curl -X POST \
+          TOKEN="${PORTFOLIO_PAT:-$PROFILE_TOKEN}"
+          curl -f -X POST \
             -H "Authorization: Bearer ${TOKEN}" \
             -H "Accept: application/vnd.github+json" \
             https://api.github.com/repos/sagarsambhwani/sagarsambhwani/dispatches \
