@@ -1,0 +1,19 @@
+name: Notify Portfolio Update
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  notify-portfolio:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Portfolio Workflow
+        env:
+          PROFILE_TOKEN: ${{ secrets.PROFILE_TOKEN }}
+        run: |
+          curl -f -X POST \
+            -H "Authorization: Bearer ${PROFILE_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            https://api.github.com/repos/sagarsambhwani/sagarsambhwani/dispatches \
+            -d '{"event_type": "update-portfolio"}'
