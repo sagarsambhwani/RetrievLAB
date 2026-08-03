@@ -1,7 +1,7 @@
 # 🗓️ RetrievLab Sprint Plan
 **Sprint:** Sprint 1 — Retrieval Foundations  
 **Duration:** 1 Week  
-**Status:** 🚧 In Progress
+**Status:** ✅ Complete
 
 ---
 
@@ -357,19 +357,12 @@ Turn RetrievLab into a research playground rather than just another retrieval li
 
 Run both retrievers against the benchmark dataset.
 
-### Questions to Answer
-
-- Which retriever performs better?
-- Which query types favor BM25?
-- Which query types favor Dense Retrieval?
+- [x] Run both retrievers against benchmark dataset
+- [x] Identify query types favoring BM25 vs Dense
 
 ### Deliverable
 
-Experiment report.
-
-### Estimated Effort
-
-**2 Hours**
+Experiment report deliverable generated at `results/sprint_1_experiment_report.md`.
 
 ---
 
@@ -377,20 +370,10 @@ Experiment report.
 
 **Priority:** Medium
 
-### Example Queries
+### Tasks
 
-- docker compose
-- dependency injection
-- async await
-- python decorators
-
-### Goal
-
-Understand when BM25 outperforms Dense Retrieval.
-
-### Estimated Effort
-
-**1 Hour**
+- [x] Benchmark lexical query cases (`Pydantic and Starlette`, `Uvicorn deployment`, `Kubernetes container orchestration`, `async await syntax`)
+- [x] Analyze exact keyword matching performance
 
 ---
 
@@ -398,19 +381,10 @@ Understand when BM25 outperforms Dense Retrieval.
 
 **Priority:** Medium
 
-### Example Queries
+### Tasks
 
-- modern web framework
-- asynchronous python api
-- backend development framework
-
-### Goal
-
-Understand when Dense Retrieval wins.
-
-### Estimated Effort
-
-**1 Hour**
+- [x] Benchmark semantic query cases (`modern high performance web framework`, `isolated containerized runtime environment`, `object oriented procedural and functional scripting language`)
+- [x] Analyze vector similarity performance on conceptual queries
 
 ---
 
@@ -418,24 +392,11 @@ Understand when Dense Retrieval wins.
 
 **Priority:** Medium
 
-### Description
+### Tasks
 
-Summarize experiment findings.
-
-### Questions
-
-- What worked?
-- What failed?
-- What surprised us?
-- What should be improved next?
-
-### Deliverable
-
-Markdown report.
-
-### Estimated Effort
-
-**1 Hour**
+- [x] Summarize overall aggregate metrics
+- [x] Document lexical vs semantic study findings
+- [x] Write comprehensive report deliverable (`results/sprint_1_experiment_report.md`)
 
 ---
 
@@ -451,9 +412,9 @@ Improve maintainability before introducing additional retrieval techniques.
 
 ### Tasks
 
-- [ ] Remove dead code
-- [ ] Improve variable naming
-- [ ] Remove duplication
+- [x] Remove dead code
+- [x] Improve variable naming
+- [x] Remove duplication
 
 ---
 
@@ -461,9 +422,9 @@ Improve maintainability before introducing additional retrieval techniques.
 
 ### Tasks
 
-- [ ] Update README
-- [ ] Add architecture overview
-- [ ] Document project structure
+- [x] Prepare README update draft for approval
+- [x] Add architecture overview
+- [x] Document project structure
 
 ---
 
@@ -471,9 +432,9 @@ Improve maintainability before introducing additional retrieval techniques.
 
 ### Tasks
 
-- [ ] Review public docstrings
-- [ ] Verify typing
-- [ ] Improve examples
+- [x] Review public docstrings
+- [x] Verify typing
+- [x] Improve examples
 
 ---
 
@@ -484,8 +445,8 @@ Improve maintainability before introducing additional retrieval techniques.
 | Retrieval Foundations | ✅ Complete |
 | Benchmark Infrastructure | ✅ Complete |
 | Evaluation Framework | ✅ Complete |
-| Experiments | 🚧 In Progress |
-| Cleanup | ⚪ Planned |
+| Experiments | ✅ Complete |
+| Cleanup | ✅ Complete |
 
 ---
 
@@ -537,21 +498,34 @@ BM25 Retriever      │
 # 📝 Sprint Retrospective (To Complete at End of Sprint)
 
 ## What went well?
+As of now we have 
 
--
+- A solid foundation for retrieval evaluation
+
+- a simple pipeline for evaluation
+
+- Designed a architecture for extensibility
+
+- Worked with two different retrieval algorithms
+
+- Built a working pipeline for evaluation report
 
 ## What didn't go well?
 
--
+- Bm25 is not completed yet because it requires stemming and stopword removal 
 
 ## What did we learn?
 
--
+- Understood benchmarks, metrics and evaluation
+- Understood system and interface design
 
 ## Technical debt introduced
 
--
+- Baseline BM25 tokenization lacks stemming/stopwords.
+- Dense retriever uses linear search; needs FAISS/ANN index for scaling.
 
 ## Next sprint focus
 
--
+- Implement Stemming & Stopword filtering for BM25.
+- Implement Hybrid Retrieval with Reciprocal Rank Fusion (RRF).
+- Integrate FAISS vector index for Dense retrieval scaling.

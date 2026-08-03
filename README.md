@@ -353,26 +353,23 @@ The experiments collectively serve as a research notebook documenting the evolut
 
 # Current Progress
 
-## Foundation
+## Sprint 1 — Retrieval Foundations (✅ Complete)
 
 - ✅ Document Loader
 - ✅ Markdown Chunker
-- ✅ Embedding Pipeline
-- ✅ FastEmbed Integration
-- ✅ Dense Retrieval
-- ✅ Linear Search Baseline
+- ✅ Embedding Pipeline & FastEmbed Integration
+- ✅ Dense Retrieval & Linear Search Baseline
+- ✅ BM25 Retrieval Engine
+- ✅ Benchmark Infrastructure (`data/benchmarks/simple2.json`, JSON Schema & Loader)
+- ✅ Evaluation Framework (Recall@K, Precision@K, MRR)
+- ✅ Experiment Runner & Evaluation Reports (`experiments/run_sprint1_experiments.py`, `results/sprint_1_experiment_report.md`)
 
-## In Progress
+## Planned (Sprint 2 & Beyond)
 
-- 🚧 Evaluation Framework
-
-## Planned
-
-- BM25 Retrieval
-- Hybrid Retrieval
-- Graph Retrieval
-- Feature Engineering
-- Learning-to-Rank
+- Stemming & Stopwords for BM25
+- Hybrid Retrieval (Reciprocal Rank Fusion / RRF)
+- FAISS Vector Store Integration
+- Feature Engineering & Learning-to-Rank (LTR)
 - Adaptive Ranker
 
 ---
