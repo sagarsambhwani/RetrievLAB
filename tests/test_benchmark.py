@@ -18,3 +18,15 @@ def test_load_benchmark():
         assert isinstance(case, BenchmarkCase)
         assert isinstance(case.query, str)
         assert isinstance(case.relevant_chunk_ids, list)
+
+
+def test_load_simple2_benchmark():
+    benchmark = load_benchmark("data/benchmarks/simple2.json")
+    assert isinstance(benchmark, Benchmark)
+    assert isinstance(benchmark.cases, list)
+    assert len(benchmark.cases) == 22
+    for case in benchmark.cases:
+        assert isinstance(case, BenchmarkCase)
+        assert isinstance(case.query, str)
+        assert isinstance(case.relevant_chunk_ids, list)
+
