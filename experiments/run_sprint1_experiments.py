@@ -152,7 +152,7 @@ def run_experiments():
         })
 
     # 7. Generate results/sprint_1_experiment_report.md
-    output_report_path = Path("results/sprint_1_experiment_report.md")
+    output_report_path = Path("results/sprint_1/sprint_1_experiment_report.md")
     output_report_path.parent.mkdir(parents=True, exist_ok=True)
 
     report_content = f"""# RetrievLab Sprint 1 — Comprehensive Experiment & Progress Report
