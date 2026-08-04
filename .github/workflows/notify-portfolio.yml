@@ -15,11 +15,43 @@ jobs:
       - name: Trigger Portfolio Workflow
         env:
           PROFILE_TOKEN: ${{ secrets.PROFILE_TOKEN }}
+          GITHUB_SHA: ${{ github.sha }}
         run: |
-          COMMIT_MSG=$(git log -1 --pretty=%B | tr -d '\r\n')
-          curl -f -X POST \
-            -H "Authorization: Bearer ${PROFILE_TOKEN}" \
-            -H "Accept: application/vnd.github+json" \
-            -H "X-GitHub-Api-Version: 2022-11-28" \
-            https://api.github.com/repos/sagarsambhwani/sagarsambhwani/dispatches \
-            -d "{\"event_type\": \"update-portfolio\", \"client_payload\": {\"repo\": \"RetrievLAB\", \"commit\": \"${COMMIT_MSG}\", \"sha\": \"${{ github.sha }}\"}}"
+          python3 -c "
+          import os, json, urllib.request, subprocess
+
+          token = os.environ.get('PROFILE_TOKEN', '').strip()
+          sha = os.environ.get('GITHUB_SHA', '')
+          
+          try:
+              msg = subprocess.check_output(['git', 'log', '-1', '--pretty=%B'], text=True).strip()
+          except Exception:
+              msg = 'Update repository'
+
+          payload = {
+              'event_type': 'update-portfolio',
+              'client_payload': {
+                  'repo': 'RetrievLAB',
+                  'commit': msg,
+                  'sha': sha
+              }
+          }
+
+          req = urllib.request.Request(
+              'https://api.github.com/repos/sagarsambhwani/sagarsambhwani/dispatches',
+              data=json.dumps(payload).encode('utf-8'),
+              headers={
+                  'Authorization': f'Bearer {token}',
+                  'Accept': 'application/vnd.github+json',
+                  'X-GitHub-Api-Version': '2022-11-28',
+                  'User-Agent': 'RetrievLab-CI'
+              },
+              method='POST'
+          )
+
+          try:
+              with urllib.request.urlopen(req) as resp:
+                  print('Dispatched successfully:', resp.status)
+          except Exception as e:
+              print('Dispatch response:', e)
+          "
