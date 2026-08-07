@@ -31,8 +31,8 @@ class MarkdownChunker:
         Returns:
             A list of Chunk objects.
         """
-        chunks = []
-        current_chunk = []
+        chunks: list[Chunk] = []
+        current_chunk: list[str] = []
         current_heading = None
 
         for line in document.content.splitlines():

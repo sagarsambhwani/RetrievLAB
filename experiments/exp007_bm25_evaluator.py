@@ -100,7 +100,7 @@ def run_experiment():
     # Test empty query
     print("\nTesting Edge Case: Empty Query")
     empty_results = retriever.retrieve("", top_k=3, chunks=chunks)
-    print(f"Query: ''")
+    print("Query: ''")
     print(f"Results count: {len(empty_results)}")
     for i, res in enumerate(empty_results, start=1):
         print(f"  {i}. Chunk ID: {res.chunk.id} | Score: {res.score:.4f}")

@@ -9,7 +9,6 @@ This script:
 5. Generates the comprehensive results/sprint_1_experiment_report.md deliverable.
 """
 from pathlib import Path
-import json
 
 from retrievlab.ingestion.loader import DocumentLoader
 from retrievlab.chunking.markdown import MarkdownChunker

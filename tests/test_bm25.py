@@ -1,5 +1,4 @@
 import math
-import pytest
 from retrievlab.models import Chunk
 from retrievlab.retrieval.bm25 import BM25Retriever
 
