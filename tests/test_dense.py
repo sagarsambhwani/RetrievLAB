@@ -3,9 +3,8 @@ Unit tests for the Dense Retriever.
 """
 
 import pytest
-from unittest.mock import Mock
 
-from retrievlab.models import Chunk, SearchResult
+from retrievlab.models import Chunk
 from retrievlab.retrieval.dense import DenseRetriever
 
 

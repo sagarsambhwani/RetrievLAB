@@ -22,9 +22,17 @@ jobs:
 
       - name: Install uv
         uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
 
       - name: Install Dependencies
         run: uv sync
 
-      - name: Run Pytest
+      - name: Run Linting (Ruff)
+        run: uv run ruff check .
+
+      - name: Run Type Checking (Mypy)
+        run: uv run mypy src
+
+      - name: Run Pytest Suite
         run: uv run pytest
