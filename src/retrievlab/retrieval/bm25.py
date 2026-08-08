@@ -2,6 +2,7 @@ import math
 import re
 
 from retrievlab.models import Chunk, SearchResult
+from retrievlab.preprocessing import BaseTokenizer, BasicWordTokenizer
 from retrievlab.retrieval.interface import Retriever
 
 
@@ -9,11 +10,18 @@ class BM25Retriever(Retriever):
     """BM25 lexical retriever.
 
     This retriever builds an inverted index over the provided chunks and
-    ranks chunks using the BM25 scoring function.
+    ranks chunks using the BM25 scoring function. In accordance with
+    design_principles.md Rule 2, preprocessing is injected via BaseTokenizer.
     """
 
-    def __init__(self) -> None:
-        """Initialize empty BM25 corpus statistics."""
+    def __init__(self, tokenizer: BaseTokenizer | None = None) -> None:
+        """Initialize BM25 corpus statistics.
+
+        Args:
+            tokenizer: Configurable tokenizer implementing BaseTokenizer.
+                       Defaults to BasicWordTokenizer if None.
+        """
+        self.tokenizer = tokenizer or BasicWordTokenizer()
         self.term_frequencies: dict[str, dict[str, int]] = {}
         self.chunk_lengths: dict[str, int] = {}
         self.average_chunk_length: float = 0.0

@@ -29,35 +29,62 @@ By the end of this sprint, RetrievLab should not only support hybrid retrieval, 
 
 ---
 
-# 🏛️ Epic 1 — Lexical Retrieval Evolution
+# 🏛️ Epic 1 — Lexical Retrieval Evolution & Preprocessing Architecture
 
 **Goal**
 
-Improve BM25 through classical Information Retrieval techniques and measure their impact.
+Establish a unified, multi-level preprocessing architecture (`retrievlab.preprocessing`) that allows interchangeable tokenization strategies (Word-level, Character/N-Gram-level, Subword-level, and Composable Pipelines) to be injected into lexical retrievers without altering algorithm implementations (adhering to `design_principles.md`).
 
 ---
 
-## 🎟️ RLB-201 — Configurable BM25 Tokenization
+## 🎟️ RLB-200 — Preprocessing Architecture & Abstract Interface
 
 ### Description
 
-Replace the fixed tokenizer with a configurable preprocessing pipeline.
+Design and implement the core `BaseTokenizer` abstraction layer to decouple tokenization from retrieval algorithms.
 
-### Features
+### Deliverables
 
-- [ ] Lowercasing
-- [ ] Regex tokenization
-- [ ] Stopword removal
-- [ ] Porter stemming
-- [ ] Pipeline configuration
-
-### Research Question
-
-> Does lexical preprocessing improve retrieval quality?
+- [ ] `BaseTokenizer` abstract base class in `retrievlab.preprocessing.interface`
+- [ ] Unified `tokenize(text: str) -> list[str]` contract
+- [ ] Type definitions and docstring standardizations
 
 ---
 
-## 🎟️ RLB-202 — BM25 Parameter Exploration
+## 🎟️ RLB-201 — Multi-Level Tokenizer Suite
+
+### Description
+
+Implement tokenizers operating across different structural levels:
+
+### Tokenizer Levels
+
+- [ ] **Word-Level** (`BasicWordTokenizer`, `RegexTokenizer`, `StopwordTokenizer`, `StemmedTokenizer`)
+- [ ] **N-Gram Level** (`CharNGramTokenizer`, `WordNGramTokenizer`)
+- [ ] **Subword Level** (`SubwordTokenizer` — BPE / Tiktoken / HuggingFace adapter)
+- [ ] **Pipeline Level** (`PipelineTokenizer` — composable normalization, tokenization, filtering, and stemming)
+
+### Research Question
+
+> How does tokenization granularity (Word vs. Char N-Gram vs. Subword vs. Stemming) impact lexical recall and index size?
+
+---
+
+## 🎟️ RLB-202 — Configurable Retriever Tokenizer Injection
+
+### Description
+
+Update `BM25Retriever` to accept any `BaseTokenizer` via dependency injection, keeping the BM25 scoring algorithm untouched (`design_principles.md` Rule 2).
+
+### Tasks
+
+- [ ] Expose `tokenizer` parameter in `BM25Retriever.__init__`
+- [ ] Inject tokenizer into index building and query retrieval phases
+- [ ] Maintain backward compatibility with default `BasicWordTokenizer`
+
+---
+
+## 🎟️ RLB-203 — BM25 Parameter Exploration
 
 ### Description
 
@@ -75,18 +102,21 @@ Expose BM25 parameters as configurable settings.
 
 ---
 
-## 🎟️ RLB-203 — BM25 Evolution Report
+## 🎟️ RLB-204 — Multi-Level Tokenization Benchmark & Lexical Evolution Report
 
 ### Description
 
-Evaluate every BM25 improvement against the Sprint 1 baseline.
+Evaluate BM25 across all tokenization levels and parameter configurations against the Sprint 1 baseline.
 
 ### Deliverable
 
-- BM25 Baseline
-- + Stopwords
-- + Stemming
-- + Parameter tuning
+Comparative report covering:
+- Baseline (Basic Word Tokenizer)
+- + Stopword Filtering
+- + Porter Stemming
+- Character $n$-grams (3-gram to 5-gram)
+- Subword / BPE tokenization
+- Parameter tuning ($k_1, b$)
 
 ---
 
