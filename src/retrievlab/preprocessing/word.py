@@ -61,7 +61,12 @@ class RegexTokenizer(BaseTokenizer):
         Returns:
             List of matched tokens.
         """
-        raise NotImplementedError("Implement custom regex tokenization.")
+        tokens = re.findall(self.pattern, text)
+
+        if self.lower:
+            tokens = [token.lower() for token in tokens]
+
+        return tokens
 
 
 class StopwordTokenizer(BaseTokenizer):
