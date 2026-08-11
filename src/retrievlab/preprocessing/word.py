@@ -6,6 +6,7 @@ This module provides word-level tokenizers implementing the BaseTokenizer interf
 - StopwordTokenizer: Word tokenization with customizable stopword filtering.
 - StemmedTokenizer: Word tokenization with stemming (e.g. Porter/Snowball).
 """
+import re
 
 from retrievlab.preprocessing.interface import BaseTokenizer
 
@@ -33,7 +34,9 @@ class BasicWordTokenizer(BaseTokenizer):
         Returns:
             List of word tokens.
         """
-        raise NotImplementedError("Implement basic word tokenization.")
+        if self.lower:
+            text = text.lower()
+        return re.findall(r"\b\w+\b", text)
 
 
 class RegexTokenizer(BaseTokenizer):
