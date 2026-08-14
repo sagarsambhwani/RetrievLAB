@@ -10,7 +10,7 @@ This module provides configurable word-level tokenization strategies:
 
 import re
 
-from nltk.stem import LancasterStemmer, PorterStemmer, SnowballStemmer
+from nltk.stem import LancasterStemmer, PorterStemmer, SnowballStemmer  # type: ignore[import-untyped]
 
 from retrievlab.preprocessing.interface import BaseTokenizer
 
@@ -183,7 +183,7 @@ class StemmedTokenizer(BaseTokenizer):
         Returns:
             Stemmed word.
         """
-        return self._stemmer.stem(word.lower())
+        return str(self._stemmer.stem(word.lower()))
 
     def tokenize(self, text: str) -> list[str]:
         """Tokenize text and apply the configured stemmer.
