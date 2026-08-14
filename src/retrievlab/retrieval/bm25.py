@@ -1,5 +1,4 @@
 import math
-import re
 
 from retrievlab.models import Chunk, SearchResult
 from retrievlab.preprocessing import BaseTokenizer, BasicWordTokenizer
@@ -28,15 +27,15 @@ class BM25Retriever(Retriever):
         self.idf: dict[str, float] = {}
 
     def _tokenize(self, text: str) -> list[str]:
-        """Convert text into lowercase word tokens.
+        """Convert text into tokens using the configured tokenizer.
 
         Args:
             text: Input text.
 
         Returns:
-            A list of normalized word tokens.
+            A list of normalized tokens.
         """
-        return re.findall(r"\b\w+\b", text.lower())
+        return self.tokenizer.tokenize(text)
 
     def index(self, chunks: list[Chunk]) -> None:
         """Build BM25 corpus statistics.
