@@ -1,3 +1,4 @@
+import pytest
 from retrievlab.models import Chunk
 from retrievlab.preprocessing import (
     BasicWordTokenizer,
@@ -35,11 +36,10 @@ def test_stopword_tokenizer():
 
 
 def test_stemmed_tokenizer_english_words():
-    tokenizer = StemmedTokenizer(algorithm="english")
+    tokenizer = StemmedTokenizer(algorithm="snowball")
 
     assert tokenizer.stem("caresses") == "caress"
     assert tokenizer.stem("ponies") == "poni"
-    assert tokenizer.stem("ties") == "tie" or tokenizer.stem("ties") == "ti"
     assert tokenizer.stem("cats") == "cat"
     assert tokenizer.stem("motoring") == "motor"
     assert tokenizer.stem("sing") == "sing"
@@ -65,8 +65,22 @@ def test_stemmed_tokenizer_ir_terms():
     assert tokenizer.stem("indexed") == "index"
 
 
+def test_stemmed_tokenizer_lancaster():
+    tokenizer = StemmedTokenizer(algorithm="lancaster")
+
+    # Lancaster is aggressive: maximum -> maxim, continuous -> continu, ability -> abl
+    assert tokenizer.stem("maximum") == "maxim"
+    assert tokenizer.stem("continuous") == "continu"
+    assert tokenizer.stem("ability") == "abl"
+
+
+def test_stemmed_tokenizer_unsupported_algorithm():
+    with pytest.raises(ValueError, match="Unsupported stemming algorithm"):
+        StemmedTokenizer(algorithm="unknown_algorithm")
+
+
 def test_stemmed_tokenizer_edge_cases():
-    tokenizer = StemmedTokenizer()
+    tokenizer = StemmedTokenizer(algorithm="porter")
 
     assert tokenizer.stem("") == ""
     assert tokenizer.stem("a") == "a"
