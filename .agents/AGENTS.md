@@ -1,5 +1,11 @@
 # Project Guidelines for RetrievLab
 
+## Core Principle: Build vs Use (Infrastructure & Algorithms)
+
+- **Implement research infrastructure and simple algorithms yourself**: Build evaluation harnesses, benchmark loaders, chunkers, and baseline algorithms from scratch to ensure complete transparency, modularity, and first-principles understanding.
+- **Use established libraries for mature algorithms and models**: Use battle-tested, optimized libraries (e.g., FAISS, FastEmbed, LightGBM, Hugging Face) for mature models and production-grade indexing/ranking algorithms.
+- **Understand library assumptions**: When utilizing external libraries, understand what the library is doing under the hood, what assumptions it makes (e.g., vector normalization, metric spaces, tokenization defaults), and how those assumptions impact experimental results.
+
 ## Design Principle: Algorithms vs Configurations
 
 RetrievLab compares **retrieval strategies**, not duplicate implementations.
@@ -11,3 +17,12 @@ RetrievLab compares **retrieval strategies**, not duplicate implementations.
 - **Rule 5 — Preserve experimental reproducibility**: Never overwrite existing configurations. Always store configuration, benchmark, evaluation metrics, and experiment reports.
 
 > **Guiding Principle**: Implement algorithms once. Explore behavior through configuration. Validate improvements through experiments.
+
+## Git Workflow & Safety Guidelines
+
+- **Guiding Light**: Preserve First $\rightarrow$ Inspect Second $\rightarrow$ Propose Third $\rightarrow$ Ask Fourth $\rightarrow$ Change Last.
+- **Granular Commits**: Commit individual files/units one-by-one using RLB semantic prefixes (`feat`, `exp`, `eval`, `docs`, `fix`, `test`, `perf`, `chore`).
+- **Push at the End**: Defer `git push` until all individual local commits are completed and verified.
+- **PowerShell Syntax**: Always use `;` or separate commands on Windows PowerShell; avoid `&&`.
+
+

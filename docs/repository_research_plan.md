@@ -55,11 +55,12 @@ This phase will populate the following hierarchy in our `docs/` folder:
 
 ```text
 docs/
-├── adr/                         # Architecture Decision Records (1 page each)
-│   ├── 0001-retriever-interface.md
-│   ├── 0002-search-result.md
-│   ├── 0003-benchmark-format.md
-│   └── 0004-chunk-model.md
+├── adr/                         # Architecture Decision Records
+│   ├── ADR-0001-preamble-chunking.md
+│   ├── ADR-0002-tokenizer-abstraction-and-stemming.md
+│   ├── ADR-0003-benchmark-schema.md
+│   ├── ADR-0004-default-embedding-model-and-assumptions.md
+│   └── ADR-0005-benchmark-suite-evolution-simple-vs-simple2.md
 ├── patterns/                    # Documented design patterns in RetrievLab
 │   ├── Strategy-Pattern.md
 │   └── Registry-Pattern.md
