@@ -82,11 +82,11 @@ RetrievLab asks:
 
 RetrievLab is built around a few simple engineering principles.
 
-## First Principles
+## First Principles & Pragmatism
 
-Every major retrieval component is implemented from scratch before introducing external frameworks.
+Implement the research infrastructure and simple algorithms yourself. Use established libraries for mature algorithms and models.
 
-The objective is understanding, not abstraction.
+You still learn the first principles by understanding what the library is doing, what assumptions it makes, and how it affects your experiment.
 
 ---
 
@@ -408,7 +408,8 @@ Everything in RetrievLab exists to help answer that question.
 
 ## Guiding Principles
 
-- Build from first principles.
+- Build research infrastructure and simple algorithms yourself; use established libraries for mature algorithms/models.
+- Understand library internals, assumptions, and their impact on experiments.
 - Prefer experiments over assumptions.
 - Keep every component modular.
 - Measure before optimizing.
@@ -418,4 +419,4 @@ Everything in RetrievLab exists to help answer that question.
 
 ---
 
-> *Understanding retrieval is the first step toward building adaptive retrieval systems.*
+> *Understanding retrieval is the first step toward building adaptive retrieval systems.*
