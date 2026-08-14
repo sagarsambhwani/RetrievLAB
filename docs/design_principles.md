@@ -102,6 +102,15 @@ This allows future comparisons across datasets and retrieval strategies.
 
 ---
 
+## Core Principle: Build vs Use (Infrastructure & Algorithms)
+
+- **Implement research infrastructure and simple algorithms yourself**: Build evaluation harnesses, benchmark loaders, chunkers, and baseline algorithms from scratch to ensure complete transparency, modularity, and first-principles understanding.
+- **Use established libraries for mature algorithms and models**: Use battle-tested, optimized libraries (e.g., FAISS, FastEmbed, LightGBM, Hugging Face) for mature models and production-grade indexing/ranking algorithms.
+- **Understand library assumptions**: When utilizing external libraries, understand what the library is doing under the hood, what assumptions it makes (e.g., vector normalization, metric spaces, tokenization defaults), and how those assumptions impact experimental results.
+
+---
+
 ## Guiding Principle
 
 > **Implement algorithms once. Explore behavior through configuration. Validate improvements through experiments.**
+
