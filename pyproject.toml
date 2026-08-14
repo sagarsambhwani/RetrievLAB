@@ -31,3 +31,14 @@ build-backend = "setuptools.build_meta"
 pythonpath = ["src"]
 testpaths = ["tests"]
 
+[tool.mypy]
+python_version = "3.12"
+warn_return_any = true
+warn_unused_configs = true
+
+[[tool.mypy.overrides]]
+module = "nltk.*"
+ignore_missing_imports = true
+
+
+
