@@ -1,68 +1,71 @@
-"""Word-Level Preprocessing and Tokenization Module.
+"""Word-level preprocessing and tokenization for RetrievLab.
 
-This module provides word-level tokenizers implementing the BaseTokenizer interface:
-- BasicWordTokenizer: Simple lowercase regex tokenization.
-- RegexTokenizer: Custom pattern-based regex tokenization.
-- StopwordTokenizer: Word tokenization with customizable stopword filtering.
-- StemmedTokenizer: Word tokenization with stemming using mature libraries (Snowball/Porter).
+This module provides configurable word-level tokenization strategies:
+
+- BasicWordTokenizer: Standard lowercase word tokenization.
+- RegexTokenizer: Configurable regex-based tokenization.
+- StopwordTokenizer: Tokenization with stopword filtering.
+- StemmedTokenizer: Tokenization with NLTK stemming.
 """
-from __future__ import annotations
 
 import re
-from typing import Callable
+
+from nltk.stem import LancasterStemmer, PorterStemmer, SnowballStemmer
 
 from retrievlab.preprocessing.interface import BaseTokenizer
 
 
 class BasicWordTokenizer(BaseTokenizer):
-    """Basic lowercase word tokenizer using standard word boundary regex.
-    
-    Splits text into alphanumeric word tokens converted to lower case.
-    """
+    """Basic word tokenizer using a standard word-boundary regex."""
 
     def __init__(self, lower: bool = True) -> None:
-        """Initialize BasicWordTokenizer.
+        """Initialize the tokenizer.
 
         Args:
-            lower: Whether to lowercase tokens (default: True).
+            lower: Whether to lowercase tokens.
         """
         self.lower = lower
 
     def tokenize(self, text: str) -> list[str]:
-        """Tokenize text into basic word tokens.
+        """Tokenize text into word tokens.
 
         Args:
-            text: Input text string.
+            text: Input text.
 
         Returns:
             List of word tokens.
         """
         if self.lower:
             text = text.lower()
+
         return re.findall(r"\b\w+\b", text)
 
 
 class RegexTokenizer(BaseTokenizer):
-    """Tokenizer using custom regular expression pattern matching."""
+    """Tokenizer using a configurable regular expression."""
 
-    def __init__(self, pattern: str = r"\b\w+\b", lower: bool = True) -> None:
-        """Initialize RegexTokenizer with regex pattern.
+    def __init__(
+        self,
+        pattern: str = r"\b\w+\b",
+        lower: bool = True,
+    ) -> None:
+        """Initialize the tokenizer.
 
         Args:
-            pattern: Regular expression pattern for token matching.
-            lower: Whether to lowercase tokens (default: True).
+            pattern: Regular expression used to identify tokens.
+            lower: Whether to lowercase extracted tokens.
         """
         self.pattern = pattern
         self.lower = lower
 
     def tokenize(self, text: str) -> list[str]:
-        """Tokenize text using the configured regex pattern.
+        """Tokenize text using the configured regex.
 
         Args:
-            text: Input text string.
+            text: Input text.
 
         Returns:
-            List of matched tokens.
+            List of extracted tokens.
         """
         tokens = re.findall(self.pattern, text)
 
@@ -90,107 +93,107 @@ DEFAULT_STOPWORDS: set[str] = {
 
 
 class StopwordTokenizer(BaseTokenizer):
-    """Word tokenizer that filters out common stop words."""
+    """Tokenizer that removes configured stopwords."""
 
     def __init__(
         self,
         base_tokenizer: BaseTokenizer | None = None,
         stopwords: set[str] | list[str] | None = None,
     ) -> None:
-        """Initialize StopwordTokenizer.
+        """Initialize the tokenizer.
 
         Args:
-            base_tokenizer: Underlying tokenizer to extract initial tokens.
-            stopwords: Custom set or list of stopwords to filter out. Defaults to common English stopwords.
+            base_tokenizer: Tokenizer used to produce initial tokens.
+            stopwords: Custom stopwords. If omitted, standard English
+                stopwords are used.
         """
         self.base_tokenizer = base_tokenizer or BasicWordTokenizer()
+
         if stopwords is None:
-            self.stopwords = DEFAULT_STOPWORDS
+            self.stopwords = set(DEFAULT_STOPWORDS)
         else:
-            self.stopwords = {w.lower() for w in stopwords}
+            self.stopwords = {word.lower() for word in stopwords}
 
     def tokenize(self, text: str) -> list[str]:
-        """Tokenize text and filter out stopwords.
+        """Tokenize text and remove stopwords.
 
         Args:
-            text: Input text string.
+            text: Input text.
 
         Returns:
-            List of non-stopword tokens.
+            Tokens excluding configured stopwords.
         """
         tokens = self.base_tokenizer.tokenize(text)
-        return [token for token in tokens if token.lower() not in self.stopwords]
+
+        return [
+            token
+            for token in tokens
+            if token.lower() not in self.stopwords
+        ]
 
 
 class StemmedTokenizer(BaseTokenizer):
-    """Word tokenizer that applies morphological stemming using mature stemmer libraries.
+    """Tokenizer that applies an NLTK stemming algorithm to tokens.
 
-    Adheres to RetrievLab Design Principle: Use established, optimized libraries
-    for mature linguistic algorithms while embedding first-principles understanding
-    of over/under-stemming assumptions in experiments.
+    Supported algorithms:
+
+    - ``porter``
+    - ``snowball``
+    - ``lancaster``
     """
 
     def __init__(
         self,
         base_tokenizer: BaseTokenizer | None = None,
-        algorithm: str = "english",
+        algorithm: str = "porter",
     ) -> None:
-        """Initialize StemmedTokenizer.
+        """Initialize the tokenizer.
 
         Args:
-            base_tokenizer: Underlying tokenizer to extract initial tokens.
-            algorithm: Stemming algorithm ('english', 'porter', 'snowball', etc.).
+            base_tokenizer: Tokenizer used to produce initial tokens.
+            algorithm: Stemming algorithm to use.
+
+        Raises:
+            ValueError: If the requested algorithm is unsupported.
         """
         self.base_tokenizer = base_tokenizer or BasicWordTokenizer()
-        self.algorithm = algorithm.lower()
-        self._stem_func: Callable[[str], str]
-        self._stem_words_func: Callable[[list[str]], list[str]]
 
-        # Normalized language name for Snowball/Porter algorithms
-        canonical_lang = "english" if self.algorithm in ("english", "porter", "snowball", "porter2") else self.algorithm
+        algorithm = algorithm.lower()
 
-        try:
-            from py_rust_stemmers import SnowballStemmer
-            self._stemmer = SnowballStemmer(canonical_lang)
-            self._stem_func = self._stemmer.stem_word
-            self._stem_words_func = self._stemmer.stem_words
-        except (ImportError, Exception):
-            try:
-                import snowballstemmer
-                self._stemmer = snowballstemmer.stemmer(canonical_lang)
-                self._stem_func = self._stemmer.stemWord
-                self._stem_words_func = self._stemmer.stemWords
-            except ImportError:
-                raise ImportError(
-                    "A stemming backend (py_rust_stemmers or snowballstemmer) is required "
-                    "for StemmedTokenizer. Ensure the virtual environment is active."
-                )
+        if algorithm == "porter":
+            self._stemmer = PorterStemmer()
+        elif algorithm == "snowball":
+            self._stemmer = SnowballStemmer("english")
+        elif algorithm == "lancaster":
+            self._stemmer = LancasterStemmer()
+        else:
+            raise ValueError(
+                f"Unsupported stemming algorithm: {algorithm!r}. "
+                "Choose from: porter, snowball, lancaster."
+            )
+
+        self.algorithm = algorithm
 
     def stem(self, word: str) -> str:
-        """Stem a single word token.
+        """Stem a single word.
 
         Args:
-            word: Input word string.
+            word: Input word.
 
         Returns:
-            Stemmed token string.
+            Stemmed word.
         """
-        if not word:
-            return ""
-        return self._stem_func(word.lower())
+        return self._stemmer.stem(word.lower())
 
     def tokenize(self, text: str) -> list[str]:
-        """Tokenize text and stem each token using the configured stemmer.
+        """Tokenize text and apply the configured stemmer.
 
         Args:
-            text: Input text string.
+            text: Input text.
 
         Returns:
             List of stemmed tokens.
         """
         tokens = self.base_tokenizer.tokenize(text)
-        if not tokens:
-            return []
-        if hasattr(self, "_stem_words_func"):
-            return self._stem_words_func(tokens)
+
         return [self.stem(token) for token in tokens]
