@@ -2,11 +2,12 @@
 Experiment 012
 
 Question:
-How does configuring regex patterns in RegexTokenizer affect per-query retrieval metrics on simple2.json?
+How does configuring regex patterns in RegexTokenizer affect per-query retrieval metrics (Recall@5, Precision@5, MRR)
+on simple2.json?
 
 Expected Result:
-- Prints a per-query comparison table comparing Alphanumeric vs Alpha-Only regex configurations.
-- Shows individual query Recall@5 and MRR for both configurations.
+- Prints a per-query comparison table comparing Alphanumeric vs Alpha-Only regex configurations across Recall, Precision, and MRR.
+- Quantifies whether stripping numeric tokens affects precision or introduces false positives.
 """
 
 from pathlib import Path
@@ -14,6 +15,7 @@ from pathlib import Path
 from retrievlab.chunking.markdown import MarkdownChunker
 from retrievlab.evaluation import (
     load_benchmark,
+    precision_at_k,
     recall_at_k,
     reciprocal_rank,
 )
@@ -52,7 +54,6 @@ def run_experiment() -> None:
     # 3. Compare index statistics
     vocab_alphanumeric = set(retriever_alphanumeric.term_frequencies.keys())
     vocab_alpha_only = set(retriever_alpha_only.term_frequencies.keys())
-    filtered_out = vocab_alphanumeric - vocab_alpha_only
 
     print(f"\n2. Index Comparison:")
     print(f"   {'Tokenizer Configuration':<40} | {'Vocab Size':<12} | {'Avg Chunk Length':<16}")
@@ -66,42 +67,46 @@ def run_experiment() -> None:
     print(f"\n3. Per-Query Benchmark Evaluation ({benchmark_path}):")
     print(f"   Loaded {len(benchmark.cases)} benchmark cases.\n")
 
-    print(f"{'#':<3} | {'Query':<42} | {'Expected':<18} | {'Alphanumeric (R@5/MRR)':<24} | {'Alpha-Only (R@5/MRR)':<20}")
+    print(f"{'#':<3} | {'Query':<40} | {'Expected':<16} | {'Alphanumeric (R/P/MRR)':<26} | {'Alpha-Only (R/P/MRR)':<24}")
     print("-" * 118)
 
-    rec_a, rr_a = [], []
-    rec_b, rr_b = [], []
+    rec_a, prec_a, rr_a = [], [], []
+    rec_b, prec_b, rr_b = [], [], []
 
     for i, case in enumerate(benchmark.cases, start=1):
         res_a = retriever_alphanumeric.retrieve(query=case.query, top_k=5, chunks=chunks)
         res_b = retriever_alpha_only.retrieve(query=case.query, top_k=5, chunks=chunks)
 
-        r_a = recall_at_k(retrieved_results=res_a, expected_results=case, k=5)
-        m_a = reciprocal_rank(retrieved_results=res_a, expected_results=case)
+        r_a = recall_at_k(res_a, case, 5)
+        p_a = precision_at_k(res_a, case, 5)
+        m_a = reciprocal_rank(res_a, case)
         rec_a.append(r_a)
+        prec_a.append(p_a)
         rr_a.append(m_a)
 
-        r_b = recall_at_k(retrieved_results=res_b, expected_results=case, k=5)
-        m_b = reciprocal_rank(retrieved_results=res_b, expected_results=case)
+        r_b = recall_at_k(res_b, case, 5)
+        p_b = precision_at_k(res_b, case, 5)
+        m_b = reciprocal_rank(res_b, case)
         rec_b.append(r_b)
+        prec_b.append(p_b)
         rr_b.append(m_b)
 
         exp_str = ",".join(case.relevant_chunk_ids)
-        if len(exp_str) > 18:
-            exp_str = exp_str[:15] + "..."
+        if len(exp_str) > 16:
+            exp_str = exp_str[:13] + "..."
 
         q_str = case.query
-        if len(q_str) > 42:
-            q_str = q_str[:39] + "..."
+        if len(q_str) > 40:
+            q_str = q_str[:37] + "..."
 
-        score_a_str = f"{r_a:.2f} / {m_a:.2f}"
-        score_b_str = f"{r_b:.2f} / {m_b:.2f}"
+        score_a_str = f"{r_a:.2f} / {p_a:.2f} / {m_a:.2f}"
+        score_b_str = f"{r_b:.2f} / {p_b:.2f} / {m_b:.2f}"
 
-        print(f"{i:<3} | {q_str:<42} | {exp_str:<18} | {score_a_str:<24} | {score_b_str:<20}")
+        print(f"{i:<3} | {q_str:<40} | {exp_str:<16} | {score_a_str:<26} | {score_b_str:<24}")
 
     print("-" * 118)
-    print(f"Alphanumeric Mean Recall@5: {sum(rec_a)/len(rec_a):.4f} | MRR: {sum(rr_a)/len(rr_a):.4f}")
-    print(f"Alpha-Only   Mean Recall@5: {sum(rec_b)/len(rec_b):.4f} | MRR: {sum(rr_b)/len(rr_b):.4f}\n")
+    print(f"Alphanumeric Mean Recall@5: {sum(rec_a)/len(rec_a):.4f} | Precision@5: {sum(prec_a)/len(prec_a):.4f} | MRR: {sum(rr_a)/len(rr_a):.4f}")
+    print(f"Alpha-Only   Mean Recall@5: {sum(rec_b)/len(rec_b):.4f} | Precision@5: {sum(prec_b)/len(prec_b):.4f} | MRR: {sum(rr_b)/len(rr_b):.4f}\n")
 
 
 if __name__ == "__main__":
