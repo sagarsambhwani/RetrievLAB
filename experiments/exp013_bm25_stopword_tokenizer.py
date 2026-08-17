@@ -2,28 +2,30 @@
 Experiment 013
 
 Question:
-How does removing English stopwords alter BM25 index statistics and retrieval metrics (Recall@5, MRR)
-on the simple2.json benchmark dataset?
+How does removing English stopwords alter per-query retrieval metrics and ranking across simple2.json?
 
 Expected Result:
-- Stopword removal drops high-frequency function words (what, is, the, for, are, of).
-- Average chunk length decreases by >20%, and stopword tokens have 0 postings in the index.
-- Evaluates on simple2.json to quantify overall metric improvements from eliminating stopword noise.
+- Prints a per-query comparison table showing Baseline vs Stopword-Filtered Recall@5 and MRR.
+- Identifies queries where stopword removal resolved ranking inversions.
 """
 
 from pathlib import Path
 
 from retrievlab.chunking.markdown import MarkdownChunker
-from retrievlab.evaluation import evaluate_retriever, load_benchmark
+from retrievlab.evaluation import (
+    load_benchmark,
+    recall_at_k,
+    reciprocal_rank,
+)
 from retrievlab.ingestion.loader import DocumentLoader
 from retrievlab.preprocessing import BasicWordTokenizer, StopwordTokenizer
 from retrievlab.retrieval.bm25 import BM25Retriever
 
 
 def run_experiment() -> None:
-    print("=" * 80)
+    print("=" * 118)
     print("Experiment 013: BM25 with StopwordTokenizer (Evaluated on simple2.json)")
-    print("=" * 80)
+    print("=" * 118)
 
     # 1. Load and chunk documents
     loader = DocumentLoader()
@@ -58,41 +60,50 @@ def run_experiment() -> None:
     print(f"   {'Filtered (StopwordTokenizer)':<30} | {vocab_stopwords:<12} | {len_stopwords:<16.2f}")
     print(f"   Reduction in average chunk token count: {((len_baseline - len_stopwords) / len_baseline) * 100:.1f}%")
 
-    # 4. Inspect stopword DF in both indices
-    sample_stopwords = ["what", "is", "the", "are", "of", "for", "and"]
-    print(f"\n3. Stopword Index Presence:")
-    print(f"   {'Token':<10} | {'Baseline DF':<15} | {'Stopword-Filtered DF':<20}")
-    print(f"   {'-' * 50}")
-    for word in sample_stopwords:
-        df_base = len(retriever_baseline.term_frequencies.get(word, {}))
-        df_stop = len(retriever_stopwords.term_frequencies.get(word, {}))
-        print(f"   {word:<10} | {df_base:<15} | {df_stop:<20}")
-
-    # 5. Evaluate both on simple2.json benchmark
+    # 4. Per-Query Benchmark Evaluation
     benchmark_path = "data/benchmarks/simple2.json"
     benchmark = load_benchmark(benchmark_path)
-    print(f"\n4. Benchmark Evaluation ({benchmark_path}):")
-    print(f"   Loaded {len(benchmark.cases)} benchmark query cases.")
+    print(f"\n3. Per-Query Benchmark Evaluation ({benchmark_path}):")
+    print(f"   Loaded {len(benchmark.cases)} benchmark cases.\n")
 
-    res_base = evaluate_retriever(
-        retriever=retriever_baseline,
-        benchmark=benchmark,
-        chunks=chunks,
-        k=5,
-        retriever_name="BM25 (Baseline Unfiltered)",
-    )
-    res_stopwords = evaluate_retriever(
-        retriever=retriever_stopwords,
-        benchmark=benchmark,
-        chunks=chunks,
-        k=5,
-        retriever_name="BM25 (+ StopwordTokenizer)",
-    )
+    print(f"{'#':<3} | {'Query':<42} | {'Expected':<18} | {'Baseline (R@5/MRR)':<22} | {'+Stopwords (R@5/MRR)':<22} | {'Diff'}")
+    print("-" * 118)
 
-    print(f"\n   {'Retriever Configuration':<30} | {'Recall@5':<10} | {'Precision@5':<14} | {'MRR':<8}")
-    print(f"   {'-' * 68}")
-    for res in [res_base, res_stopwords]:
-        print(f"   {res.retriever_name:<30} | {res.recall_at_k:<10.4f} | {res.precision_at_k:<14.4f} | {res.mrr:<8.4f}")
+    rec_base, rr_base = [], []
+    rec_stop, rr_stop = [], []
+
+    for i, case in enumerate(benchmark.cases, start=1):
+        res_b = retriever_baseline.retrieve(query=case.query, top_k=5, chunks=chunks)
+        res_s = retriever_stopwords.retrieve(query=case.query, top_k=5, chunks=chunks)
+
+        r_b = recall_at_k(retrieved_results=res_b, expected_results=case, k=5)
+        m_b = reciprocal_rank(retrieved_results=res_b, expected_results=case)
+        rec_base.append(r_b)
+        rr_base.append(m_b)
+
+        r_s = recall_at_k(retrieved_results=res_s, expected_results=case, k=5)
+        m_s = reciprocal_rank(retrieved_results=res_s, expected_results=case)
+        rec_stop.append(r_s)
+        rr_stop.append(m_s)
+
+        diff_str = f"+{m_s - m_b:.2f}" if m_s > m_b else (f"{m_s - m_b:.2f}" if m_s < m_b else "=")
+
+        exp_str = ",".join(case.relevant_chunk_ids)
+        if len(exp_str) > 18:
+            exp_str = exp_str[:15] + "..."
+
+        q_str = case.query
+        if len(q_str) > 42:
+            q_str = q_str[:39] + "..."
+
+        score_b_str = f"{r_b:.2f} / {m_b:.2f}"
+        score_s_str = f"{r_s:.2f} / {m_s:.2f}"
+
+        print(f"{i:<3} | {q_str:<42} | {exp_str:<18} | {score_b_str:<22} | {score_s_str:<22} | {diff_str}")
+
+    print("-" * 118)
+    print(f"Baseline   Mean Recall@5: {sum(rec_base)/len(rec_base):.4f} | MRR: {sum(rr_base)/len(rr_base):.4f}")
+    print(f"+Stopwords Mean Recall@5: {sum(rec_stop)/len(rec_stop):.4f} | MRR: {sum(rr_stop)/len(rr_stop):.4f}\n")
 
 
 if __name__ == "__main__":
