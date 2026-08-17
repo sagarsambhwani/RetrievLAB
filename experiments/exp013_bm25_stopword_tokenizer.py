@@ -2,18 +2,19 @@
 Experiment 013
 
 Question:
-How does removing English stopwords alter BM25 index statistics, average chunk length,
-and scoring on conversational vs keyword queries?
+How does removing English stopwords alter BM25 index statistics and retrieval metrics (Recall@5, MRR)
+on the simple2.json benchmark dataset?
 
 Expected Result:
 - Stopword removal drops high-frequency function words (what, is, the, for, are, of).
-- Average chunk length decreases, and stopword tokens have 0 postings in the index.
-- Conversational queries score only on discriminative content terms.
+- Average chunk length decreases by >20%, and stopword tokens have 0 postings in the index.
+- Evaluates on simple2.json to quantify overall metric improvements from eliminating stopword noise.
 """
 
 from pathlib import Path
 
 from retrievlab.chunking.markdown import MarkdownChunker
+from retrievlab.evaluation import evaluate_retriever, load_benchmark
 from retrievlab.ingestion.loader import DocumentLoader
 from retrievlab.preprocessing import BasicWordTokenizer, StopwordTokenizer
 from retrievlab.retrieval.bm25 import BM25Retriever
@@ -21,7 +22,7 @@ from retrievlab.retrieval.bm25 import BM25Retriever
 
 def run_experiment() -> None:
     print("=" * 80)
-    print("Experiment 013: BM25 with StopwordTokenizer")
+    print("Experiment 013: BM25 with StopwordTokenizer (Evaluated on simple2.json)")
     print("=" * 80)
 
     # 1. Load and chunk documents
@@ -67,36 +68,31 @@ def run_experiment() -> None:
         df_stop = len(retriever_stopwords.term_frequencies.get(word, {}))
         print(f"   {word:<10} | {df_base:<15} | {df_stop:<20}")
 
-    # 5. Query Scoring Comparison on a Conversational Question
-    query = "What are the key features of FastAPI?"
-    print(f"\n4. Query Term Contribution for: '{query}'")
+    # 5. Evaluate both on simple2.json benchmark
+    benchmark_path = "data/benchmarks/simple2.json"
+    benchmark = load_benchmark(benchmark_path)
+    print(f"\n4. Benchmark Evaluation ({benchmark_path}):")
+    print(f"   Loaded {len(benchmark.cases)} benchmark query cases.")
 
-    print("\n   A) Baseline Token Breakdown:")
-    base_tokens = retriever_baseline.tokenizer.tokenize(query)
-    print(f"      Tokens: {base_tokens}")
-    for token in base_tokens:
-        idf = retriever_baseline._inverse_document_frequency(token)
-        print(f"      - '{token}': idf={idf:.3f}")
+    res_base = evaluate_retriever(
+        retriever=retriever_baseline,
+        benchmark=benchmark,
+        chunks=chunks,
+        k=5,
+        retriever_name="BM25 (Baseline Unfiltered)",
+    )
+    res_stopwords = evaluate_retriever(
+        retriever=retriever_stopwords,
+        benchmark=benchmark,
+        chunks=chunks,
+        k=5,
+        retriever_name="BM25 (+ StopwordTokenizer)",
+    )
 
-    print("\n   B) Stopword-Filtered Token Breakdown:")
-    stop_tokens = retriever_stopwords.tokenizer.tokenize(query)
-    print(f"      Tokens: {stop_tokens}")
-    for token in stop_tokens:
-        idf = retriever_stopwords._inverse_document_frequency(token)
-        print(f"      - '{token}': idf={idf:.3f}")
-
-    # 6. Execute retrieval
-    print(f"\n5. Retrieval Results for '{query}':")
-    results_base = retriever_baseline.retrieve(query=query, top_k=2, chunks=chunks)
-    results_stop = retriever_stopwords.retrieve(query=query, top_k=2, chunks=chunks)
-
-    print("   Baseline Top 2:")
-    for rank, res in enumerate(results_base, start=1):
-        print(f"     Rank {rank}: [{res.chunk.id}] Score: {res.score:.3f} | Heading: {res.chunk.metadata.get('heading', 'N/A')}")
-
-    print("   Stopword-Filtered Top 2:")
-    for rank, res in enumerate(results_stop, start=1):
-        print(f"     Rank {rank}: [{res.chunk.id}] Score: {res.score:.3f} | Heading: {res.chunk.metadata.get('heading', 'N/A')}")
+    print(f"\n   {'Retriever Configuration':<30} | {'Recall@5':<10} | {'Precision@5':<14} | {'MRR':<8}")
+    print(f"   {'-' * 68}")
+    for res in [res_base, res_stopwords]:
+        print(f"   {res.retriever_name:<30} | {res.recall_at_k:<10.4f} | {res.precision_at_k:<14.4f} | {res.mrr:<8.4f}")
 
 
 if __name__ == "__main__":
