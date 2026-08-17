@@ -2,19 +2,18 @@
 Experiment 014
 
 Question:
-How do stemming algorithms (Porter, Snowball, Lancaster) enable BM25 to match
-inflected query terms against their morphological root forms in the corpus?
+How do stemming algorithms (Porter, Snowball, Lancaster) perform on the simple2.json benchmark
+compared to the unstemmed baseline?
 
 Expected Result:
-- Unstemmed baseline BM25 misses chunks when query words use different morphological suffixes.
-- StemmedTokenizer (Porter/Snowball/Lancaster) conflates inflected variants to shared stems,
-  allowing BM25 to retrieve relevant chunks with positive scores.
-- Lancaster performs more aggressive stemming than Porter/Snowball.
+- Morphological conflation improves recall and MRR on queries where word suffixes vary.
+- Quantifies performance gains across all 22 benchmark queries for Porter, Snowball, and Lancaster stemmers.
 """
 
 from pathlib import Path
 
 from retrievlab.chunking.markdown import MarkdownChunker
+from retrievlab.evaluation import evaluate_retriever, load_benchmark
 from retrievlab.ingestion.loader import DocumentLoader
 from retrievlab.preprocessing import BasicWordTokenizer, StemmedTokenizer
 from retrievlab.retrieval.bm25 import BM25Retriever
@@ -22,7 +21,7 @@ from retrievlab.retrieval.bm25 import BM25Retriever
 
 def run_experiment() -> None:
     print("=" * 80)
-    print("Experiment 014: BM25 with StemmedTokenizer (Porter, Snowball, Lancaster)")
+    print("Experiment 014: BM25 with StemmedTokenizer (Evaluated on simple2.json)")
     print("=" * 80)
 
     # 1. Load and chunk documents
@@ -45,10 +44,10 @@ def run_experiment() -> None:
     retriever_lancaster = BM25Retriever(tokenizer=StemmedTokenizer(algorithm="lancaster"))
 
     retrievers = {
-        "Baseline (No Stemming)": retriever_base,
-        "Porter Stemmer": retriever_porter,
-        "Snowball Stemmer": retriever_snowball,
-        "Lancaster Stemmer": retriever_lancaster,
+        "BM25 (No Stemming)": retriever_base,
+        "BM25 (Porter Stemmer)": retriever_porter,
+        "BM25 (Snowball Stemmer)": retriever_snowball,
+        "BM25 (Lancaster Stemmer)": retriever_lancaster,
     }
 
     # 3. Index corpus and compare vocabulary compression
@@ -70,19 +69,27 @@ def run_experiment() -> None:
         l = retriever_lancaster.tokenizer.stem(word)  # type: ignore[attr-defined]
         print(f"   {word:<16} | {p:<14} | {s:<14} | {l:<14}")
 
-    # 5. Retrieval test with inflectional query
-    query = "deploying applications with containers"
-    print(f"\n4. Retrieval Comparison for Inflectional Query: '{query}'")
-    print(f"   (Corpus uses: 'Deploy', 'deployment', 'Containers', 'applications')")
+    # 5. Evaluate all on simple2.json benchmark
+    benchmark_path = "data/benchmarks/simple2.json"
+    benchmark = load_benchmark(benchmark_path)
+    print(f"\n4. Benchmark Evaluation ({benchmark_path}):")
+    print(f"   Loaded {len(benchmark.cases)} benchmark query cases.")
 
+    results = []
     for name, r in retrievers.items():
-        tokens = r.tokenizer.tokenize(query)
-        results = r.retrieve(query=query, top_k=2, chunks=chunks)
-        print(f"\n   [{name}]")
-        print(f"   Tokens: {tokens}")
-        for rank, res in enumerate(results, start=1):
-            heading = res.chunk.metadata.get("heading", "N/A")
-            print(f"     Rank {rank}: [{res.chunk.id}] Score: {res.score:.3f} | Heading: {heading}")
+        res = evaluate_retriever(
+            retriever=r,
+            benchmark=benchmark,
+            chunks=chunks,
+            k=5,
+            retriever_name=name,
+        )
+        results.append(res)
+
+    print(f"\n   {'Retriever Configuration':<28} | {'Recall@5':<10} | {'Precision@5':<14} | {'MRR':<8}")
+    print(f"   {'-' * 66}")
+    for res in results:
+        print(f"   {res.retriever_name:<28} | {res.recall_at_k:<10.4f} | {res.precision_at_k:<14.4f} | {res.mrr:<8.4f}")
 
 
 if __name__ == "__main__":
