@@ -3,27 +3,32 @@ Experiment 011
 
 Question:
 How does BM25 perform with explicit BasicWordTokenizer dependency injection on the raw document corpus
-and the simple2.json benchmark dataset?
+and each query in the simple2.json benchmark dataset?
 
 Expected Result:
 - BasicWordTokenizer tokenizes text into lowercase word tokens using standard word boundaries.
 - BM25Retriever successfully computes index statistics (average chunk length, vocabulary size, IDF).
-- Computes baseline Recall@5, Precision@5, and MRR across all 22 benchmark queries in simple2.json.
+- Prints a detailed per-query evaluation table showing Expected Chunks, Top-1 Retrieved, Recall@5, and MRR for all 22 benchmark cases.
 """
 
 from pathlib import Path
 
 from retrievlab.chunking.markdown import MarkdownChunker
-from retrievlab.evaluation import evaluate_retriever, load_benchmark
+from retrievlab.evaluation import (
+    evaluate_retriever,
+    load_benchmark,
+    recall_at_k,
+    reciprocal_rank,
+)
 from retrievlab.ingestion.loader import DocumentLoader
 from retrievlab.preprocessing import BasicWordTokenizer
 from retrievlab.retrieval.bm25 import BM25Retriever
 
 
 def run_experiment() -> None:
-    print("=" * 80)
+    print("=" * 118)
     print("Experiment 011: BM25 with BasicWordTokenizer (Evaluated on simple2.json)")
-    print("=" * 80)
+    print("=" * 118)
 
     # 1. Load and chunk documents
     loader = DocumentLoader()
@@ -60,23 +65,47 @@ def run_experiment() -> None:
         idf = retriever._inverse_document_frequency(token)
         print(f"   {token:<15} | {df:<20} | {idf:<8.3f}")
 
-    # 5. Evaluate against simple2.json benchmark
+    # 5. Per-Query Benchmark Evaluation on simple2.json
     benchmark_path = "data/benchmarks/simple2.json"
     benchmark = load_benchmark(benchmark_path)
-    print(f"\n4. Benchmark Evaluation ({benchmark_path}):")
-    print(f"   Loaded {len(benchmark.cases)} benchmark query cases.")
+    print(f"\n4. Per-Query Benchmark Evaluation ({benchmark_path}):")
+    print(f"   Loaded {len(benchmark.cases)} benchmark cases.\n")
 
-    result = evaluate_retriever(
-        retriever=retriever,
-        benchmark=benchmark,
-        chunks=chunks,
-        k=5,
-        retriever_name="BM25 (BasicWordTokenizer)",
-    )
+    print(f"{'#':<3} | {'Query':<45} | {'Expected':<22} | {'Top-1 Retrieved (Score)':<24} | {'Recall@5':<8} | {'MRR':<6}")
+    print("-" * 118)
 
-    print(f"\n   {'Retriever':<30} | {'Recall@5':<10} | {'Precision@5':<14} | {'MRR':<8}")
-    print(f"   {'-' * 68}")
-    print(f"   {result.retriever_name:<30} | {result.recall_at_k:<10.4f} | {result.precision_at_k:<14.4f} | {result.mrr:<8.4f}")
+    recalls = []
+    rrs = []
+
+    for i, case in enumerate(benchmark.cases, start=1):
+        results = retriever.retrieve(query=case.query, top_k=5, chunks=chunks)
+
+        rec = recall_at_k(retrieved_results=results, expected_results=case, k=5)
+        rr = reciprocal_rank(retrieved_results=results, expected_results=case)
+        recalls.append(rec)
+        rrs.append(rr)
+
+        expected_str = ",".join(case.relevant_chunk_ids)
+        if len(expected_str) > 22:
+            expected_str = expected_str[:19] + "..."
+
+        if results:
+            top_1_str = f"{results[0].chunk.id} ({results[0].score:.2f})"
+        else:
+            top_1_str = "None"
+
+        query_str = case.query
+        if len(query_str) > 45:
+            query_str = query_str[:42] + "..."
+
+        print(f"{i:<3} | {query_str:<45} | {expected_str:<22} | {top_1_str:<24} | {rec:<8.2f} | {rr:<6.2f}")
+
+    print("-" * 118)
+
+    # 6. Summary Aggregate Metrics
+    mean_recall = sum(recalls) / len(recalls) if recalls else 0.0
+    mean_mrr = sum(rrs) / len(rrs) if rrs else 0.0
+    print(f"Aggregate Mean Recall@5: {mean_recall:.4f} | Aggregate Mean Reciprocal Rank (MRR): {mean_mrr:.4f}\n")
 
 
 if __name__ == "__main__":
