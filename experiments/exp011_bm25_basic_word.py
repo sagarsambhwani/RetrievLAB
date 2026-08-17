@@ -2,17 +2,19 @@
 Experiment 011
 
 Question:
-How does BM25 perform with explicit BasicWordTokenizer dependency injection on the raw document corpus?
+How does BM25 perform with explicit BasicWordTokenizer dependency injection on the raw document corpus
+and the simple2.json benchmark dataset?
 
 Expected Result:
 - BasicWordTokenizer tokenizes text into lowercase word tokens using standard word boundaries.
 - BM25Retriever successfully computes index statistics (average chunk length, vocabulary size, IDF).
-- Keyword queries retrieve the expected relevant chunks with positive BM25 relevance scores.
+- Computes baseline Recall@5, Precision@5, and MRR across all 22 benchmark queries in simple2.json.
 """
 
 from pathlib import Path
 
 from retrievlab.chunking.markdown import MarkdownChunker
+from retrievlab.evaluation import evaluate_retriever, load_benchmark
 from retrievlab.ingestion.loader import DocumentLoader
 from retrievlab.preprocessing import BasicWordTokenizer
 from retrievlab.retrieval.bm25 import BM25Retriever
@@ -20,7 +22,7 @@ from retrievlab.retrieval.bm25 import BM25Retriever
 
 def run_experiment() -> None:
     print("=" * 80)
-    print("Experiment 011: BM25 with BasicWordTokenizer")
+    print("Experiment 011: BM25 with BasicWordTokenizer (Evaluated on simple2.json)")
     print("=" * 80)
 
     # 1. Load and chunk documents
@@ -58,22 +60,23 @@ def run_experiment() -> None:
         idf = retriever._inverse_document_frequency(token)
         print(f"   {token:<15} | {df:<20} | {idf:<8.3f}")
 
-    # 5. Execute retrieval queries
-    queries = [
-        "What is FastAPI?",
-        "Docker containers",
-        "Python programming language",
-    ]
+    # 5. Evaluate against simple2.json benchmark
+    benchmark_path = "data/benchmarks/simple2.json"
+    benchmark = load_benchmark(benchmark_path)
+    print(f"\n4. Benchmark Evaluation ({benchmark_path}):")
+    print(f"   Loaded {len(benchmark.cases)} benchmark query cases.")
 
-    print(f"\n4. Retrieval Results:")
-    for query in queries:
-        print(f"\n   Query: '{query}'")
-        results = retriever.retrieve(query=query, top_k=2, chunks=chunks)
-        for rank, res in enumerate(results, start=1):
-            heading = res.chunk.metadata.get("heading", "N/A")
-            first_line = res.chunk.text.split("\n")[0]
-            print(f"     Rank {rank}: [{res.chunk.id}] (Score: {res.score:.3f}) | Heading: {heading}")
-            print(f"             Snippet: {first_line[:70]}...")
+    result = evaluate_retriever(
+        retriever=retriever,
+        benchmark=benchmark,
+        chunks=chunks,
+        k=5,
+        retriever_name="BM25 (BasicWordTokenizer)",
+    )
+
+    print(f"\n   {'Retriever':<30} | {'Recall@5':<10} | {'Precision@5':<14} | {'MRR':<8}")
+    print(f"   {'-' * 68}")
+    print(f"   {result.retriever_name:<30} | {result.recall_at_k:<10.4f} | {result.precision_at_k:<14.4f} | {result.mrr:<8.4f}")
 
 
 if __name__ == "__main__":
