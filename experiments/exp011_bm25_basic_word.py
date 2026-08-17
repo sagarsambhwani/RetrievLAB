@@ -8,15 +8,15 @@ and each query in the simple2.json benchmark dataset?
 Expected Result:
 - BasicWordTokenizer tokenizes text into lowercase word tokens using standard word boundaries.
 - BM25Retriever successfully computes index statistics (average chunk length, vocabulary size, IDF).
-- Prints a detailed per-query evaluation table showing Expected Chunks, Top-1 Retrieved, Recall@5, and MRR for all 22 benchmark cases.
+- Prints a detailed per-query evaluation table showing Recall@5, Precision@5, and MRR for all 22 benchmark cases.
 """
 
 from pathlib import Path
 
 from retrievlab.chunking.markdown import MarkdownChunker
 from retrievlab.evaluation import (
-    evaluate_retriever,
     load_benchmark,
+    precision_at_k,
     recall_at_k,
     reciprocal_rank,
 )
@@ -71,23 +71,27 @@ def run_experiment() -> None:
     print(f"\n4. Per-Query Benchmark Evaluation ({benchmark_path}):")
     print(f"   Loaded {len(benchmark.cases)} benchmark cases.\n")
 
-    print(f"{'#':<3} | {'Query':<45} | {'Expected':<22} | {'Top-1 Retrieved (Score)':<24} | {'Recall@5':<8} | {'MRR':<6}")
+    print(f"{'#':<3} | {'Query':<40} | {'Expected':<20} | {'Top-1 Retrieved (Score)':<24} | {'R@5':<5} | {'P@5':<5} | {'MRR':<5}")
     print("-" * 118)
 
     recalls = []
+    precisions = []
     rrs = []
 
     for i, case in enumerate(benchmark.cases, start=1):
         results = retriever.retrieve(query=case.query, top_k=5, chunks=chunks)
 
         rec = recall_at_k(retrieved_results=results, expected_results=case, k=5)
+        prec = precision_at_k(retrieved_results=results, expected_results=case, k=5)
         rr = reciprocal_rank(retrieved_results=results, expected_results=case)
+
         recalls.append(rec)
+        precisions.append(prec)
         rrs.append(rr)
 
         expected_str = ",".join(case.relevant_chunk_ids)
-        if len(expected_str) > 22:
-            expected_str = expected_str[:19] + "..."
+        if len(expected_str) > 20:
+            expected_str = expected_str[:17] + "..."
 
         if results:
             top_1_str = f"{results[0].chunk.id} ({results[0].score:.2f})"
@@ -95,17 +99,18 @@ def run_experiment() -> None:
             top_1_str = "None"
 
         query_str = case.query
-        if len(query_str) > 45:
-            query_str = query_str[:42] + "..."
+        if len(query_str) > 40:
+            query_str = query_str[:37] + "..."
 
-        print(f"{i:<3} | {query_str:<45} | {expected_str:<22} | {top_1_str:<24} | {rec:<8.2f} | {rr:<6.2f}")
+        print(f"{i:<3} | {query_str:<40} | {expected_str:<20} | {top_1_str:<24} | {rec:<5.2f} | {prec:<5.2f} | {rr:<5.2f}")
 
     print("-" * 118)
 
     # 6. Summary Aggregate Metrics
     mean_recall = sum(recalls) / len(recalls) if recalls else 0.0
+    mean_precision = sum(precisions) / len(precisions) if precisions else 0.0
     mean_mrr = sum(rrs) / len(rrs) if rrs else 0.0
-    print(f"Aggregate Mean Recall@5: {mean_recall:.4f} | Aggregate Mean Reciprocal Rank (MRR): {mean_mrr:.4f}\n")
+    print(f"Aggregate Mean Recall@5: {mean_recall:.4f} | Precision@5: {mean_precision:.4f} | MRR: {mean_mrr:.4f}\n")
 
 
 if __name__ == "__main__":
