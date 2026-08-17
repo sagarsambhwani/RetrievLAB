@@ -2,27 +2,30 @@
 Experiment 014
 
 Question:
-How do stemming algorithms (Porter, Snowball, Lancaster) perform on the simple2.json benchmark
-compared to the unstemmed baseline?
+How do stemming algorithms (Porter, Snowball, Lancaster) perform on individual queries across simple2.json?
 
 Expected Result:
-- Morphological conflation improves recall and MRR on queries where word suffixes vary.
-- Quantifies performance gains across all 22 benchmark queries for Porter, Snowball, and Lancaster stemmers.
+- Prints a per-query comparison table showing Baseline vs Porter/Snowball/Lancaster metrics.
+- Highlights queries where stemming recovered missed chunks.
 """
 
 from pathlib import Path
 
 from retrievlab.chunking.markdown import MarkdownChunker
-from retrievlab.evaluation import evaluate_retriever, load_benchmark
+from retrievlab.evaluation import (
+    load_benchmark,
+    recall_at_k,
+    reciprocal_rank,
+)
 from retrievlab.ingestion.loader import DocumentLoader
 from retrievlab.preprocessing import BasicWordTokenizer, StemmedTokenizer
 from retrievlab.retrieval.bm25 import BM25Retriever
 
 
 def run_experiment() -> None:
-    print("=" * 80)
+    print("=" * 118)
     print("Experiment 014: BM25 with StemmedTokenizer (Evaluated on simple2.json)")
-    print("=" * 80)
+    print("=" * 118)
 
     # 1. Load and chunk documents
     loader = DocumentLoader()
@@ -44,52 +47,58 @@ def run_experiment() -> None:
     retriever_lancaster = BM25Retriever(tokenizer=StemmedTokenizer(algorithm="lancaster"))
 
     retrievers = {
-        "BM25 (No Stemming)": retriever_base,
-        "BM25 (Porter Stemmer)": retriever_porter,
-        "BM25 (Snowball Stemmer)": retriever_snowball,
-        "BM25 (Lancaster Stemmer)": retriever_lancaster,
+        "Baseline": retriever_base,
+        "Porter": retriever_porter,
+        "Snowball": retriever_snowball,
+        "Lancaster": retriever_lancaster,
     }
 
-    # 3. Index corpus and compare vocabulary compression
-    print(f"\n2. Index Vocabulary Compression:")
-    print(f"   {'Algorithm':<28} | {'Vocab Size':<12} | {'Avg Chunk Length':<16}")
-    print(f"   {'-' * 60}")
-    for name, r in retrievers.items():
+    for r in retrievers.values():
         r.index(chunks)
-        print(f"   {name:<28} | {len(r.term_frequencies):<12} | {r.average_chunk_length:<16.2f}")
 
-    # 4. Inspect morphological transformations across algorithms
-    sample_words = ["deploying", "deployment", "containers", "containerized", "programming", "applications"]
-    print(f"\n3. Stemming Transformations:")
-    print(f"   {'Original Word':<16} | {'Porter':<14} | {'Snowball':<14} | {'Lancaster':<14}")
-    print(f"   {'-' * 62}")
-    for word in sample_words:
-        p = retriever_porter.tokenizer.stem(word)  # type: ignore[attr-defined]
-        s = retriever_snowball.tokenizer.stem(word)  # type: ignore[attr-defined]
-        l = retriever_lancaster.tokenizer.stem(word)  # type: ignore[attr-defined]
-        print(f"   {word:<16} | {p:<14} | {s:<14} | {l:<14}")
-
-    # 5. Evaluate all on simple2.json benchmark
+    # 3. Per-Query Benchmark Evaluation
     benchmark_path = "data/benchmarks/simple2.json"
     benchmark = load_benchmark(benchmark_path)
-    print(f"\n4. Benchmark Evaluation ({benchmark_path}):")
-    print(f"   Loaded {len(benchmark.cases)} benchmark query cases.")
+    print(f"\n2. Per-Query Benchmark Evaluation ({benchmark_path}):")
+    print(f"   Loaded {len(benchmark.cases)} benchmark cases.\n")
 
-    results = []
-    for name, r in retrievers.items():
-        res = evaluate_retriever(
-            retriever=r,
-            benchmark=benchmark,
-            chunks=chunks,
-            k=5,
-            retriever_name=name,
-        )
-        results.append(res)
+    print(f"{'#':<3} | {'Query':<40} | {'Expected':<16} | {'Baseline (R@5/MRR)':<20} | {'Porter (R@5/MRR)':<18} | {'Snowball (R@5/MRR)':<18}")
+    print("-" * 118)
 
-    print(f"\n   {'Retriever Configuration':<28} | {'Recall@5':<10} | {'Precision@5':<14} | {'MRR':<8}")
-    print(f"   {'-' * 66}")
-    for res in results:
-        print(f"   {res.retriever_name:<28} | {res.recall_at_k:<10.4f} | {res.precision_at_k:<14.4f} | {res.mrr:<8.4f}")
+    rec_base, rr_base = [], []
+    rec_port, rr_port = [], []
+    rec_snow, rr_snow = [], []
+
+    for i, case in enumerate(benchmark.cases, start=1):
+        res_b = retriever_base.retrieve(query=case.query, top_k=5, chunks=chunks)
+        res_p = retriever_porter.retrieve(query=case.query, top_k=5, chunks=chunks)
+        res_s = retriever_snowball.retrieve(query=case.query, top_k=5, chunks=chunks)
+
+        r_b, m_b = recall_at_k(res_b, case, 5), reciprocal_rank(res_b, case)
+        r_p, m_p = recall_at_k(res_p, case, 5), reciprocal_rank(res_p, case)
+        r_s, m_s = recall_at_k(res_s, case, 5), reciprocal_rank(res_s, case)
+
+        rec_base.append(r_b)
+        rr_base.append(m_b)
+        rec_port.append(r_p)
+        rr_port.append(m_p)
+        rec_snow.append(r_s)
+        rr_snow.append(m_s)
+
+        exp_str = ",".join(case.relevant_chunk_ids)
+        if len(exp_str) > 16:
+            exp_str = exp_str[:13] + "..."
+
+        q_str = case.query
+        if len(q_str) > 40:
+            q_str = q_str[:37] + "..."
+
+        print(f"{i:<3} | {q_str:<40} | {exp_str:<16} | {f'{r_b:.2f} / {m_b:.2f}':<20} | {f'{r_p:.2f} / {m_p:.2f}':<18} | {f'{r_s:.2f} / {m_s:.2f}':<18}")
+
+    print("-" * 118)
+    print(f"Baseline Mean Recall@5: {sum(rec_base)/len(rec_base):.4f} | MRR: {sum(rr_base)/len(rr_base):.4f}")
+    print(f"Porter   Mean Recall@5: {sum(rec_port)/len(rec_port):.4f} | MRR: {sum(rr_port)/len(rr_port):.4f}")
+    print(f"Snowball Mean Recall@5: {sum(rec_snow)/len(rec_snow):.4f} | MRR: {sum(rr_snow)/len(rr_snow):.4f}\n")
 
 
 if __name__ == "__main__":
