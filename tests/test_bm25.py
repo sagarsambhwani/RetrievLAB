@@ -1,4 +1,6 @@
 import math
+import pytest
+
 from retrievlab.models import Chunk
 from retrievlab.retrieval.bm25 import BM25Retriever
 
@@ -119,6 +121,50 @@ def test_edge_case_inputs():
     assert results_punc[0].score == 0.0
 
 
+def test_parameter_validation():
+    """Verify that BM25 parameters k1 and b are strictly validated."""
+    # Valid configurations
+    BM25Retriever(k1=0.0, b=0.0)
+    BM25Retriever(k1=2.5, b=1.0)
+    BM25Retriever(k1=1.2, b=0.5)
+
+    # Invalid k1 (must be >= 0)
+    with pytest.raises(ValueError, match="k1 must be non-negative"):
+        BM25Retriever(k1=-0.5)
+
+    # Invalid b (must be in [0, 1])
+    with pytest.raises(ValueError, match="b must be in the range"):
+        BM25Retriever(b=-0.1)
+
+    with pytest.raises(ValueError, match="b must be in the range"):
+        BM25Retriever(b=1.1)
+
+
+def test_configurable_k1_and_b():
+    """Verify that custom k1 and b parameters alter scoring calculations appropriately."""
+    c1 = Chunk(id="c1", document_id="doc1", text="fastapi framework")
+    c2 = Chunk(id="c2", document_id="doc1", text="fastapi modern web framework for building fast api with python")
+    c3 = Chunk(id="c3", document_id="doc1", text="docker container runtime")
+
+    # When b=0.0, length normalization is disabled. Both c1 and c2 have 1 occurrence of 'fastapi',
+    # so they should receive identical term-frequency scores for 'fastapi'.
+    retriever_no_len_norm = BM25Retriever(k1=1.5, b=0.0)
+    retriever_no_len_norm.index([c1, c2, c3])
+
+    score_c1_b0 = retriever_no_len_norm.bm25_score(["fastapi"], c1)
+    score_c2_b0 = retriever_no_len_norm.bm25_score(["fastapi"], c2)
+    assert score_c1_b0 > 0.0
+    assert math.isclose(score_c1_b0, score_c2_b0)
+
+    # When b=1.0 (full length normalization), shorter chunk c1 gets a significantly higher score than long chunk c2.
+    retriever_full_len_norm = BM25Retriever(k1=1.5, b=1.0)
+    retriever_full_len_norm.index([c1, c2, c3])
+
+    score_c1_b1 = retriever_full_len_norm.bm25_score(["fastapi"], c1)
+    score_c2_b1 = retriever_full_len_norm.bm25_score(["fastapi"], c2)
+    assert score_c1_b1 > score_c2_b1
+
+
 if __name__ == "__main__":
     print("Running BM25 unit and edge case tests...")
     test_basic_correctness()
@@ -126,5 +172,8 @@ if __name__ == "__main__":
     test_unknown_terms()
     test_empty_corpus()
     test_edge_case_inputs()
+    test_parameter_validation()
+    test_configurable_k1_and_b()
     print("All tests passed successfully!")
+
 
