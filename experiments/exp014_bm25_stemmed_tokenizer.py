@@ -39,7 +39,7 @@ def run_experiment() -> None:
     for doc in documents:
         chunks.extend(chunker.chunk(doc))
 
-    print(f"\n1. Corpus Loading:")
+    print("\n1. Corpus Loading:")
     print(f"   Loaded {len(documents)} document(s) producing {len(chunks)} chunk(s).")
 
     # 2. Initialize Retrievers with different stemming algorithms
