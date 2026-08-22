@@ -38,7 +38,7 @@ def run_experiment() -> None:
     for doc in documents:
         chunks.extend(chunker.chunk(doc))
 
-    print(f"\n1. Corpus Loading:")
+    print("\n1. Corpus Loading:")
     print(f"   Loaded {len(documents)} document(s) producing {len(chunks)} chunk(s).")
 
     # 2. Initialize Baseline and Stopword Retrievers
@@ -54,7 +54,7 @@ def run_experiment() -> None:
     len_baseline = retriever_baseline.average_chunk_length
     len_stopwords = retriever_stopwords.average_chunk_length
 
-    print(f"\n2. Index Statistics Comparison:")
+    print("\n2. Index Statistics Comparison:")
     print(f"   {'Configuration':<30} | {'Vocab Size':<12} | {'Avg Chunk Length':<16}")
     print(f"   {'-' * 63}")
     print(f"   {'Baseline (BasicWordTokenizer)':<30} | {vocab_baseline:<12} | {len_baseline:<16.2f}")
