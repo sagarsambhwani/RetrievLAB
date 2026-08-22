@@ -37,13 +37,13 @@ def run_experiment() -> None:
     for doc in documents:
         chunks.extend(chunker.chunk(doc))
 
-    print(f"\n1. Corpus Loading:")
+    print("\n1. Corpus Loading:")
     print(f"   Loaded {len(documents)} document(s) producing {len(chunks)} chunk(s).")
 
     # 2. Load benchmark dataset
     benchmark_path = "data/benchmarks/simple2.json"
     benchmark = load_benchmark(benchmark_path)
-    print(f"\n2. Benchmark Dataset:")
+    print("\n2. Benchmark Dataset:")
     print(f"   Loaded {len(benchmark.cases)} benchmark cases from '{benchmark_path}'.\n")
 
     # 3. Define parameter grid
