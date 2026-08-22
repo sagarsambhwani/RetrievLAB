@@ -39,7 +39,7 @@ def run_experiment() -> None:
     for doc in documents:
         chunks.extend(chunker.chunk(doc))
 
-    print(f"\n1. Corpus Loading:")
+    print("\n1. Corpus Loading:")
     print(f"   Loaded {len(documents)} document(s) producing {len(chunks)} chunk(s).")
 
     # 2. Configure two regex tokenizer variations
@@ -55,7 +55,7 @@ def run_experiment() -> None:
     vocab_alphanumeric = set(retriever_alphanumeric.term_frequencies.keys())
     vocab_alpha_only = set(retriever_alpha_only.term_frequencies.keys())
 
-    print(f"\n2. Index Comparison:")
+    print("\n2. Index Comparison:")
     print(f"   {'Tokenizer Configuration':<40} | {'Vocab Size':<12} | {'Avg Chunk Length':<16}")
     print(f"   {'-' * 73}")
     print(f"   {'RegexTokenizer(\\b\\w+\\b) [Alphanumeric]':<40} | {len(vocab_alphanumeric):<12} | {retriever_alphanumeric.average_chunk_length:<16.2f}")
