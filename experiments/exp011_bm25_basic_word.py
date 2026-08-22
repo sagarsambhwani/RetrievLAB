@@ -40,7 +40,7 @@ def run_experiment() -> None:
     for doc in documents:
         chunks.extend(chunker.chunk(doc))
 
-    print(f"\n1. Corpus Loading:")
+    print("\n1. Corpus Loading:")
     print(f"   Loaded {len(documents)} document(s) producing {len(chunks)} chunk(s).")
 
     # 2. Initialize BasicWordTokenizer and BM25Retriever
@@ -50,14 +50,14 @@ def run_experiment() -> None:
     # 3. Index corpus
     retriever.index(chunks)
     vocab_size = len(retriever.term_frequencies)
-    print(f"\n2. Index Statistics:")
-    print(f"   Tokenizer: BasicWordTokenizer(lower=True)")
+    print("\n2. Index Statistics:")
+    print("   Tokenizer: BasicWordTokenizer(lower=True)")
     print(f"   Vocabulary Size: {vocab_size} unique terms")
     print(f"   Average Chunk Length: {retriever.average_chunk_length:.2f} tokens")
 
     # 4. Inspect sample token DF and IDF values
     sample_tokens = ["fastapi", "docker", "python", "framework", "containers", "the"]
-    print(f"\n3. Sample Token Statistics:")
+    print("\n3. Sample Token Statistics:")
     print(f"   {'Token':<15} | {'Doc Frequency (DF)':<20} | {'IDF':<8}")
     print(f"   {'-' * 48}")
     for token in sample_tokens:
