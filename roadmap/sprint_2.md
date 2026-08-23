@@ -136,10 +136,10 @@ Implement Reciprocal Rank Fusion as the first hybrid retrieval strategy.
 
 ### Tasks
 
-- [ ] Generic RRF implementation
-- [ ] Support multiple retrievers
-- [ ] Configurable fusion constant
-- [ ] Unit tests
+- [x] Generic RRF implementation
+- [x] Support multiple retrievers
+- [x] Configurable fusion constant
+- [x] Unit tests
 
 ### Research Question
 
