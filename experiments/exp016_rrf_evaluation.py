@@ -66,7 +66,7 @@ def run_experiment() -> dict[str, Any]:
     # 4. Load Benchmark Suite
     benchmark_path = "data/benchmarks/simple2.json"
     benchmark = load_benchmark(benchmark_path)
-    print(f"\n2. Benchmark Dataset:")
+    print("\n2. Benchmark Dataset:")
     print(f"   Loaded {len(benchmark.cases)} benchmark cases from '{benchmark_path}'.")
 
     # 5. Evaluate Baselines
@@ -259,8 +259,6 @@ def run_experiment() -> dict[str, Any]:
     results_dir.mkdir(parents=True, exist_ok=True)
     report_path = results_dir / "exp013_rrf.md"
 
-    best_k_res = max(k_sweep_results, key=lambda x: (x["recall"], x["mrr"]))
-
     report_md = f"""# Experiment 013 Report: Reciprocal Rank Fusion (RRF) Parameter Study & Hybrid Evaluation
 
 **Date**: 2026-08-23  
@@ -307,7 +305,7 @@ We measure all three standard IR evaluation metrics: **Recall@5**, **Precision@5
         w_str = f"[{w_res['weights'][0]:.1f}, {w_res['weights'][1]:.1f}]"
         report_md += f"| **{w_res['config']}** | {w_res['k']} | {w_str} | {w_res['recall']:.4f} | {w_res['precision']:.4f} | {w_res['mrr']:.4f} |\n"
 
-    report_md += f"""
+    report_md += """
 ---
 
 ## 4. Query-Level Complementarity Breakdown
@@ -318,7 +316,7 @@ We measure all three standard IR evaluation metrics: **Recall@5**, **Precision@5
     for row in query_rows:
         report_md += f"| {row['index']} | {row['query']} | `{row['expected']}` | {row['bm25_str']} | {row['dense_str']} | {row['rrf_str']} | {row['note']} |\n"
 
-    report_md += f"""
+    report_md += """
 ---
 
 ## 5. Conclusions & Next Steps
