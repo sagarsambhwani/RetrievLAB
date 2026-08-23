@@ -40,7 +40,7 @@ This registry tracks formal hypotheses tested within RetrievLab experiments.
 ---
 
 ### H005 — Reciprocal Rank Fusion (RRF) Parameter Stability
-- **Status**: ⚪ Planned for Sprint 2 (RLB-210)
+- **Status**: 🟡 In Progress (RLB-210 Core Implemented, Pending RLB-211/212 Benchmark Sweeps)
 - **Hypothesis**: Fusing Dense and BM25 rankings via Reciprocal Rank Fusion with smoothing parameter $k \in [20, 60]$ achieves higher `MRR` and `Recall@5` than either standalone retriever.
 - **Formula**: $\text{RRF}(d) = \sum_{m \in M} \frac{1}{k + r_m(d)}$
 - **Metrics**: `Recall@5`, `Precision@5`, `MRR`
