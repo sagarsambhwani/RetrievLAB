@@ -40,10 +40,11 @@ results/
 
 ---
 
-## Sprint 2 Experiments (Upcoming / In Progress)
+## Sprint 2 Results Index
 
-- `exp011_stemming.md` — Impact of Stemming Tokenizer on BM25
-- `exp012_stopwords.md` — Impact of Stopwords Removal on BM25
-- `exp013_rrf.md` — Reciprocal Rank Fusion (RRF) Parameter Study
-- `exp014_hybrid.md` — Hybrid Retrieval vs BM25 & Dense Baselines
-- `sprint_2_summary.md` — Sprint 2 Comprehensive Summary Report
+| Report File | Title & Scope | Status |
+| :--- | :--- | :---: |
+| [`sprint_2/exp013_rrf.md`](file:///e:/Downloads/RetrievLab/results/sprint_2/exp013_rrf.md) | Reciprocal Rank Fusion (RRF) Parameter Study | Completed |
+| [`sprint_2/exp014_hybrid.md`](file:///e:/Downloads/RetrievLab/results/sprint_2/exp014_hybrid.md) | Hybrid Retrieval vs BM25 & Dense Baselines | Completed |
+| `sprint_2/sprint_2_summary.md` | Sprint 2 Comprehensive Summary Report | In Progress |
+
