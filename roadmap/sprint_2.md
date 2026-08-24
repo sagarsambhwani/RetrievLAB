@@ -155,9 +155,9 @@ Implement a Hybrid Retriever using BM25 + Dense retrieval.
 
 ### Tasks
 
-- [ ] Execute both retrievers
-- [ ] Fuse rankings
-- [ ] Return unified SearchResults
+- [x] Execute both retrievers
+- [x] Fuse rankings
+- [x] Return unified SearchResults
 
 ### Acceptance Criteria
 
