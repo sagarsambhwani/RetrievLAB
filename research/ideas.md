@@ -1,5 +1,11 @@
 # Research & Feature Ideas
 
+## Active Research Strategy
+
+### 0. Adaptive Reranker Architecture (v1)
+- **Document:** [`research/adaptive_reranker_v1.md`](file:///e:/Downloads/RetrievLab/research/adaptive_reranker_v1.md)
+- **Scope:** Multi-stage candidate generation ($K_{\text{cand}}=20-50$), score-margin dynamic gating, zero-shot pretrained cross-encoder cascade, and feasibility analysis for learned GBDT/LambdaMART.
+
 ## Post-Adaptive Reranker Phase
 
 ### 1. Plug-and-Play Evaluation UI
