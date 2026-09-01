@@ -2,6 +2,14 @@ from retrievlab.evaluation.benchmark import Benchmark, BenchmarkCase, load_bench
 from retrievlab.evaluation.metrics import recall_at_k, precision_at_k, reciprocal_rank
 from retrievlab.evaluation.reports import RetrieverEvaluationResult, EvaluationReport
 from retrievlab.evaluation.evaluate import evaluate_retriever
+from retrievlab.evaluation.diagnostics import (
+    QueryOutcomeCategory,
+    QueryDiagnostic,
+    HybridFailureAnalysisReport,
+    categorize_query_outcome,
+    analyze_query_outcome,
+    analyze_hybrid_failures,
+)
 
 __all__ = [
     "Benchmark",
@@ -13,4 +21,11 @@ __all__ = [
     "RetrieverEvaluationResult",
     "EvaluationReport",
     "evaluate_retriever",
+    "QueryOutcomeCategory",
+    "QueryDiagnostic",
+    "HybridFailureAnalysisReport",
+    "categorize_query_outcome",
+    "analyze_query_outcome",
+    "analyze_hybrid_failures",
 ]
+
