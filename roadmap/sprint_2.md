@@ -181,14 +181,17 @@ Compare BM25, Dense and Hybrid on every benchmark query.
 
 Automatically detect:
 
-- [ ] BM25 failures recovered by Hybrid
-- [ ] Dense failures recovered by Hybrid
-- [ ] Queries where Hybrid performs worse
-- [ ] Ranking disagreements
+- [x] BM25 failures recovered by Hybrid
+- [x] Dense failures recovered by Hybrid
+- [x] Queries where Hybrid performs worse
+- [x] Ranking disagreements
 
-### Deliverable
+### Deliverables
 
-Query-level comparison report.
+- [x] Automated diagnostic tooling in `src/retrievlab/evaluation/diagnostics.py`
+- [x] Unit test suite in `tests/test_diagnostics.py`
+- [x] Query-level failure taxonomy in `research/failures.md`
+- [x] Benchmark failure analysis report in `results/sprint_2/exp018_hybrid_diagnostics.md`
 
 ---
 

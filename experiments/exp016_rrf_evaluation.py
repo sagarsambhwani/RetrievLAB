@@ -254,12 +254,12 @@ def run_experiment() -> dict[str, Any]:
     print(f"   RRF Degradations:             {synergy_counts['rrf_degradation']}")
     print(f"   Joint Failures:               {synergy_counts['joint_failure']}")
 
-    # 9. Save Markdown Report to results/sprint_2/exp013_rrf.md
+    # 9. Save Markdown Report to results/sprint_2/exp016_rrf.md
     results_dir = Path("results/sprint_2")
     results_dir.mkdir(parents=True, exist_ok=True)
-    report_path = results_dir / "exp013_rrf.md"
+    report_path = results_dir / "exp016_rrf.md"
 
-    report_md = f"""# Experiment 013 Report: Reciprocal Rank Fusion (RRF) Parameter Study & Hybrid Evaluation
+    report_md = f"""# Experiment 016 Report: Reciprocal Rank Fusion (RRF) Parameter Study & Hybrid Evaluation
 
 **Date**: 2026-08-23  
 **Status**: Completed  

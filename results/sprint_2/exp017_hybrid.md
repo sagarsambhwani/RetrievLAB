@@ -1,4 +1,4 @@
-# Experiment 014 Report: HybridRetriever Evaluation & Complementarity Analysis
+# Experiment 017 Report: HybridRetriever Evaluation & Complementarity Analysis
 
 **Date**: 2026-08-24  
 **Status**: Completed  

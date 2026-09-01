@@ -1,4 +1,4 @@
-# Experiment 013 Report: Reciprocal Rank Fusion (RRF) Parameter Study & Hybrid Evaluation
+# Experiment 016 Report: Reciprocal Rank Fusion (RRF) Parameter Study & Hybrid Evaluation
 
 **Date**: 2026-08-23  
 **Status**: Completed  

@@ -44,8 +44,9 @@ results/
 
 | Report File | Title & Scope | Status |
 | :--- | :--- | :---: |
-| [`sprint_2/exp013_rrf.md`](file:///e:/Downloads/RetrievLab/results/sprint_2/exp013_rrf.md) | Reciprocal Rank Fusion (RRF) Parameter Study | Completed |
-| [`sprint_2/exp014_hybrid.md`](file:///e:/Downloads/RetrievLab/results/sprint_2/exp014_hybrid.md) | Hybrid Retrieval vs BM25 & Dense Baselines | Completed |
 | [`sprint_2/exp015_parameter_tuning.md`](file:///e:/Downloads/RetrievLab/results/sprint_2/exp015_parameter_tuning.md) | BM25 Parameter Sensitivity Sweep ($k_1$ and $b$) | Completed |
+| [`sprint_2/exp016_rrf.md`](file:///e:/Downloads/RetrievLab/results/sprint_2/exp016_rrf.md) | Reciprocal Rank Fusion (RRF) Parameter Study | Completed |
+| [`sprint_2/exp017_hybrid.md`](file:///e:/Downloads/RetrievLab/results/sprint_2/exp017_hybrid.md) | Hybrid Retrieval vs BM25 & Dense Baselines | Completed |
+| [`sprint_2/exp018_hybrid_diagnostics.md`](file:///e:/Downloads/RetrievLab/results/sprint_2/exp018_hybrid_diagnostics.md) | Hybrid Failure Diagnostics & Outcome Distribution | Completed |
 | `sprint_2/sprint_2_summary.md` | Sprint 2 Comprehensive Summary Report | In Progress |
 

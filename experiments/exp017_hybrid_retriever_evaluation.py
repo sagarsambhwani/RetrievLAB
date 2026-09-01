@@ -207,12 +207,12 @@ def run_experiment() -> None:
     print(f"   Hybrid Degradations (Recall loss):        {category_counts['hybrid_degradation']}")
     print(f"   Joint Misses:                             {category_counts['joint_miss']}")
 
-    # 8. Export Markdown Report to results/sprint_2/exp014_hybrid.md
+    # 8. Export Markdown Report to results/sprint_2/exp017_hybrid.md
     results_dir = Path("results/sprint_2")
     results_dir.mkdir(parents=True, exist_ok=True)
-    report_path = results_dir / "exp014_hybrid.md"
+    report_path = results_dir / "exp017_hybrid.md"
 
-    report_md = f"""# Experiment 014 Report: HybridRetriever Evaluation & Complementarity Analysis
+    report_md = f"""# Experiment 017 Report: HybridRetriever Evaluation & Complementarity Analysis
 
 **Date**: 2026-08-24  
 **Status**: Completed  
