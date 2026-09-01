@@ -45,9 +45,9 @@ Design and implement the core `BaseTokenizer` abstraction layer to decouple toke
 
 ### Deliverables
 
-- [ ] `BaseTokenizer` abstract base class in `retrievlab.preprocessing.interface`
-- [ ] Unified `tokenize(text: str) -> list[str]` contract
-- [ ] Type definitions and docstring standardizations
+- [x] `BaseTokenizer` abstract base class in `retrievlab.preprocessing.interface`
+- [x] Unified `tokenize(text: str) -> list[str]` contract
+- [x] Type definitions and docstring standardizations
 
 ---
 
@@ -59,14 +59,16 @@ Implement tokenizers operating across different structural levels:
 
 ### Tokenizer Levels
 
-- [ ] **Word-Level** (`BasicWordTokenizer`, `RegexTokenizer`, `StopwordTokenizer`, `StemmedTokenizer`)
-- [ ] **N-Gram Level** (`CharNGramTokenizer`, `WordNGramTokenizer`)
-- [ ] **Subword Level** (`SubwordTokenizer` — BPE / Tiktoken / HuggingFace adapter)
-- [ ] **Pipeline Level** (`PipelineTokenizer` — composable normalization, tokenization, filtering, and stemming)
+- [x] **Word-Level** (`BasicWordTokenizer`, `RegexTokenizer`, `StopwordTokenizer`, `StemmedTokenizer`)
+- [x] **N-Gram Level** (`CharNGramTokenizer`, `WordNGramTokenizer`)
+- [x] **Subword Level** (`SubwordTokenizer` — BPE / Tiktoken / HuggingFace adapter)
+- [x] **Pipeline Level** (`PipelineTokenizer` — composable normalization, tokenization, filtering, and stemming)
 
 ### Research Question
 
 > How does tokenization granularity (Word vs. Char N-Gram vs. Subword vs. Stemming) impact lexical recall and index size?
+
+> **Finding:** Morphological stemming (Porter/Snowball) preserves high Recall@5 (0.9545) while compressing index posting lists; basic word tokenization provides the cleanest latency/recall balance. See [`ADR-0002`](file:///e:/Downloads/RetrievLab/docs/adr/ADR-0002-tokenizer-abstraction-and-stemming.md).
 
 ---
 
@@ -78,9 +80,9 @@ Update `BM25Retriever` to accept any `BaseTokenizer` via dependency injection, k
 
 ### Tasks
 
-- [ ] Expose `tokenizer` parameter in `BM25Retriever.__init__`
-- [ ] Inject tokenizer into index building and query retrieval phases
-- [ ] Maintain backward compatibility with default `BasicWordTokenizer`
+- [x] Expose `tokenizer` parameter in `BM25Retriever.__init__`
+- [x] Inject tokenizer into index building and query retrieval phases
+- [x] Maintain backward compatibility with default `BasicWordTokenizer`
 
 ---
 
@@ -92,13 +94,15 @@ Expose BM25 parameters as configurable settings.
 
 ### Tasks
 
-- [ ] Configurable k₁
-- [ ] Configurable b
-- [ ] Benchmark multiple parameter combinations
+- [x] Configurable k₁
+- [x] Configurable b
+- [x] Benchmark multiple parameter combinations
 
 ### Research Question
 
 > Which parameter configuration performs best for our benchmark corpus?
+
+> **Finding:** Standard defaults ($k_1=1.5, b=0.75$) achieve near-optimal performance (Recall@5: 0.9545, MRR: 0.9318); lower $b \in [0.3, 0.5]$ slightly mitigates length penalties on short heading chunks. See [`exp015_bm25_parameter_tuning.py`](file:///e:/Downloads/RetrievLab/experiments/exp015_bm25_parameter_tuning.py).
 
 ---
 
@@ -111,12 +115,16 @@ Evaluate BM25 across all tokenization levels and parameter configurations agains
 ### Deliverable
 
 Comparative report covering:
-- Baseline (Basic Word Tokenizer)
-- + Stopword Filtering
-- + Porter Stemming
-- Character $n$-grams (3-gram to 5-gram)
-- Subword / BPE tokenization
-- Parameter tuning ($k_1, b$)
+- [x] Baseline (Basic Word Tokenizer) — `exp011`
+- [x] + Stopword Filtering — `exp013`
+- [x] + Porter Stemming — `exp014`
+- [ ] Character $n$-grams (3-gram to 5-gram) *(Deferred to Sprint 3)*
+- [ ] Subword / BPE tokenization *(Deferred to Sprint 3)*
+- [x] Parameter tuning ($k_1, b$) — `exp015`
+
+---
+
+> **Epic 1 Status & Remaining Items:** Core word-level tokenizers, stemming, and parameter tuning are fully implemented and verified. Comparative evaluation for Character $n$-grams and Subword/BPE tokenization is deferred to **Sprint 3 (BEIR Integration)** because measuring morphological OOV (out-of-vocabulary) resilience and subword granularity requires multi-thousand query scale to yield statistically significant findings.
 
 ---
 
