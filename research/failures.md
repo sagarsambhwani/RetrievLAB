@@ -32,3 +32,15 @@ This log systematically records failure modes observed during retrieval benchmar
 - **Retriever**: `BM25Retriever` (Unstemmed)
 - **Observed Behavior**: Missed passage containing *"querying an index"* due to morphological suffix variance (`queries` $\neq$ `querying`, `indexed` $\neq$ `index`).
 - **Status**: Mitigated by `StemmedTokenizer` in Sprint 2.
+
+---
+
+### Case 003 — BM25 Vocabulary Miss on Deployment Query Recovered by Hybrid
+- **Benchmark**: `simple2.json` (Query 6: *"How can FastAPI be deployed?"*)
+- **Target Chunk**: `big_fastapi.md:6` (Passage covers containerization, production servers, and cloud scaling)
+- **BM25 Result**: Recall@5 = 0.00 (missed completely due to vocabulary mismatch on deployment terminology).
+- **Dense Result**: Recall@5 = 1.00, Rank = 5, MRR = 0.20.
+- **Hybrid Result (`HybridRetriever`, RRF 1:2)**: **Recovered into Top-5!**
+- **Outcome Category**: `DENSE_WIN_HYBRID_RECOVERED`
+- **Mitigation / Research Finding**: Validates hypothesis H005; multi-channel rank fusion successfully recovers single-channel misses with 0 degradations across the dataset.
+
