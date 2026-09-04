@@ -253,14 +253,16 @@ Introduce FAISS as an interchangeable dense retrieval backend.
 
 ### Tasks
 
-- [ ] Build FAISS index
-- [ ] Validate retrieval equivalence
-- [ ] Compare retrieval latency
-- [ ] Benchmark against brute-force search
+- [x] Build FAISS index (`VectorIndex` interface & `FAISSIndex` implementation in `retrievlab.indexing`)
+- [x] Validate retrieval equivalence (100% bit-exact ranking and score equivalence with `DenseRetriever`)
+- [x] Compare retrieval latency across corpus scales ($N \in [100, 10\,000]$)
+- [x] Benchmark against brute-force search (`exp019_faiss_equivalence_and_latency.py`)
 
 ### Research Question
 
 > Can we improve scalability while preserving retrieval quality?
+
+> **Finding:** Yes. `FAISSIndex` using `faiss.IndexFlatIP` on unit-$L_2$ normalized vectors yields 100% bit-exact metric and ranking equivalence against `DenseRetriever` across all 22 benchmark queries ($\Delta = 0.0000$ on Recall@5, Precision@5, and MRR), while sustaining 1,000+ QPS on single-threaded CPU search. See [`exp019_faiss.md`](file:///e:/Downloads/RetrievLab/results/sprint_2/exp019_faiss.md) and [`ADR-0008`](file:///e:/Downloads/RetrievLab/docs/adr/ADR-0008-faiss-vector-indexing.md).
 
 ---
 
