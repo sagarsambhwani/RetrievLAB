@@ -49,5 +49,5 @@ results/
 | [`sprint_2/exp017_hybrid.md`](file:///e:/Downloads/RetrievLab/results/sprint_2/exp017_hybrid.md) | Hybrid Retrieval vs BM25 & Dense Baselines | Completed |
 | [`sprint_2/exp018_hybrid_diagnostics.md`](file:///e:/Downloads/RetrievLab/results/sprint_2/exp018_hybrid_diagnostics.md) | Hybrid Failure Diagnostics & Outcome Distribution | Completed |
 | [`sprint_2/exp019_faiss.md`](file:///e:/Downloads/RetrievLab/results/sprint_2/exp019_faiss.md) | FAISS Vector Indexing Equivalence & Latency Profiling | Completed |
-| `sprint_2/sprint_2_summary.md` | Sprint 2 Comprehensive Summary Report | In Progress |
+| [`sprint_2/sprint_2_summary.md`](file:///e:/Downloads/RetrievLab/results/sprint_2/sprint_2_summary.md) | Sprint 2 Comprehensive Summary & Research Report | Completed |
 
