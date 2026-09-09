@@ -18,6 +18,11 @@ RetrievLab compares **retrieval strategies**, not duplicate implementations.
 
 > **Guiding Principle**: Implement algorithms once. Explore behavior through configuration. Validate improvements through experiments.
 
+## User Interaction & Implementation Rule
+
+- **Propose & Show First**: Before implementing any code changes (features, data loaders, algorithms, experiments), always present a clear breakdown of the proposed sub-steps and wait for user confirmation.
+- **Granular Execution**: Break complex tasks into small, bite-sized sub-steps so the user can easily track progress.
+
 ## Git Workflow & Safety Guidelines
 
 - **Guiding Light**: Preserve First $\rightarrow$ Inspect Second $\rightarrow$ Propose Third $\rightarrow$ Ask Fourth $\rightarrow$ Change Last.
