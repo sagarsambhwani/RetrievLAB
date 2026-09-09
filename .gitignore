@@ -9,3 +9,9 @@ wheels/
 # Virtual environments
 .venv
 .env
+
+# Benchmark and Index Caches
+data/beir/
+data/indexes/
+data/processed/
+
