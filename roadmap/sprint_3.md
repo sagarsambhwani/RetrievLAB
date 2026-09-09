@@ -47,11 +47,12 @@ Integrate standardized, multi-domain evaluation datasets from the BEIR benchmark
 Implement an automated loader and caching layer for BEIR datasets, supporting standardized document schemas, queries, and graded relevance assessments (`qrels`).
 
 ### Tasks
-- [ ] Implement `BEIRLoader` in `retrievlab.ingestion.beir` (download, parse, cache)
-- [ ] Support `SciFact` (scientific claim verification, ~5K docs)
-- [ ] Support `NFCorpus` (biomedical search, ~3.6K docs)
-- [ ] Support `FiQA` (financial question answering, ~57K docs)
-- [ ] Map BEIR corpora into standard `Chunk` and `BenchmarkCase` schemas
+- [x] Implement `BEIRLoader` in `retrievlab.ingestion.beir` (download, parse, cache)
+- [x] Support `SciFact` (scientific claim verification, ~5K docs)
+- [x] Support `NFCorpus` (biomedical search, ~3.6K docs)
+- [x] Support `FiQA` (financial question answering, ~57K docs)
+- [x] Map BEIR corpora into standard `Chunk` and `BenchmarkCase` schemas
+- [x] Unit test suite in `tests/test_beir.py` (5 unit tests passing)
 
 ---
 
