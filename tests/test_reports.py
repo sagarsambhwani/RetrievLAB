@@ -54,6 +54,6 @@ def test_evaluation_report_markdown_and_dict():
 
     md = report.to_markdown()
     lines = md.splitlines()
-    assert "| Retriever | Recall@5 | MRR | Precision@5 |" in lines[0]
-    assert "| Dense | 0.8200 | 0.7100 | 0.7600 |" in lines[2]
-    assert "| BM25 | 0.7900 | 0.7400 | 0.7200 |" in lines[3]
+    assert "| Retriever | Recall@5 | MRR | Precision@5 | nDCG@5 | MAP@5 | Hit@5 |" in lines[0]
+    assert "| Dense | 0.8200 | 0.7100 | 0.7600 | 0.0000 | 0.0000 | 0.0000 |" in lines[2]
+    assert "| BM25 | 0.7900 | 0.7400 | 0.7200 | 0.0000 | 0.0000 | 0.0000 |" in lines[3]
