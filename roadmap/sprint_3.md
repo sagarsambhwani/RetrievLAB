@@ -77,12 +77,13 @@ Formalize the first-stage retrieval phase as a dedicated `CandidateGenerator` pr
 ## 🎟️ RLB-310 — Candidate Generator & Candidate Pool Abstraction
 
 ### Description
-Design and implement `CandidateGenerator` and `CandidatePool` in `retrievlab.selection.candidate`.
+Design and implement `CandidateGenerator` and `CandidatePool` in `retrievlab.selection`.
 
 ### Tasks
-- [ ] Define `CandidateGenerator` abstract base class
-- [ ] Define `CandidatePool` data structure (holding candidate chunks, initial retrieval ranks, and per-retriever raw scores)
-- [ ] Implement `MultiRetrieverCandidateGenerator` (unioning candidates from BM25 + FAISS Dense)
+- [x] Define `CandidateGenerator` abstract base class in `retrievlab.selection.interface`
+- [x] Define `Candidate` and `CandidatePool` data models tracking retriever scores, ranks, and sources in `retrievlab.selection.candidate`
+- [x] Implement `MultiRetrieverCandidateGenerator` and `SingleRetrieverCandidateGenerator` in `retrievlab.selection.generator`
+- [x] Unit test suite in `tests/test_candidate_selection.py` (7 unit tests passing)
 
 ---
 
