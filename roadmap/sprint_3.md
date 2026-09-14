@@ -188,9 +188,10 @@ Expand the evaluation suite with graded relevance metrics and produce the compre
 
 ### Description
 Implement graded ranking metrics in `retrievlab.evaluation.metrics`:
-- [ ] `ndcg_at_k(retrieved_results, qrels, k=10)` (Normalized Discounted Cumulative Gain)
-- [ ] `map_at_k(retrieved_results, qrels, k=10)` (Mean Average Precision)
-- [ ] `hit_at_k(retrieved_results, qrels, k=10)`
+- [x] `hit_at_k(retrieved_results, expected_results, k=None, min_grade=1)`
+- [x] `ndcg_at_k(retrieved_results, expected_results, k=None)` (Normalized Discounted Cumulative Gain)
+- [x] `average_precision_at_k(retrieved_results, expected_results, k=None, min_grade=1)` (Mean Average Precision)
+- [x] Unit test suite in `tests/test_metrics.py` (10 unit tests passing)
 
 ---
 
