@@ -8,7 +8,6 @@ Supports automated downloading, caching, and conversion of standard BEIR dataset
 from pathlib import Path
 import json
 import zipfile
-import urllib.request
 import logging
 
 from retrievlab.models import Chunk
