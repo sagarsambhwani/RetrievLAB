@@ -240,6 +240,7 @@ class BEIRLoader:
                 BenchmarkCase(
                     query=queries[qid],
                     relevant_chunk_ids=relevant_ids,
+                    relevance_grades=judgments,
                 )
             )
 
