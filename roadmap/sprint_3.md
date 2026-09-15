@@ -59,7 +59,10 @@ Implement an automated loader and caching layer for BEIR datasets, supporting st
 ## 🎟️ RLB-301 — Out-of-Domain Generalization Benchmark
 
 ### Description
-Evaluate baseline BM25, FAISS Dense, and Hybrid (RRF) retrievers across all three BEIR domains.
+Evaluate baseline BM25, FAISS Dense, and Hybrid (RRF) retrievers across BEIR domains.
+
+### Tasks
+- [x] Experiment 021: Evaluate BM25, FAISS Dense, and Hybrid (RRF 1:1, 1:2) on BEIR SciFact (`results/sprint_3/exp021_beir_scifact_baselines.md`)
 
 ### Research Question
 > How do lexical, dense, and hybrid retrieval strategies generalize when tested on specialized out-of-domain corpora (Biomedical vs Scientific vs Financial)?
