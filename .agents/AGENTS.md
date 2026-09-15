@@ -32,4 +32,11 @@ RetrievLab compares **retrieval strategies**, not duplicate implementations.
 - **Push at the End**: Defer `git push` until all individual local commits are completed and verified.
 - **PowerShell Syntax**: Always use `;` or separate commands on Windows PowerShell; avoid `&&`.
 
+## Research Experiment Reporting Guidelines
+
+- **8-Part Research Schema**: All reports in `results/` must adhere strictly to the 8-part empirical research structure (`.agents/rules/experiment-reports.md`).
+- **Data-Driven Prose**: Never hard-code subjective outcomes or biased conclusions in report generators; always state exact measured deltas.
+- **Explicit Metric Labeling**: Always specify the exact metric used for diagnostics and complementarity analysis.
+
+
 
