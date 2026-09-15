@@ -20,7 +20,9 @@ RetrievLab compares **retrieval strategies**, not duplicate implementations.
 
 ## User Interaction & Implementation Rule
 
-- **Propose & Show First**: Before implementing any code changes (features, data loaders, algorithms, experiments), always present a clear breakdown of the proposed sub-steps and wait for user confirmation.
+- **Mandatory Approval Before Writing Code**: Never write or modify non-test code (features, data loaders, algorithms, experiments, models) without showing the proposed implementation first and obtaining explicit user approval.
+- **Exception for Test Cases**: Writing, updating, or running unit test cases (`tests/test_*.py`) to verify functionality is exempt from requiring prior approval.
+- **Propose & Show First**: Present a clear breakdown of the proposed sub-steps, classes, and file paths before asking for approval.
 - **Granular Execution**: Break complex tasks into small, bite-sized sub-steps so the user can easily track progress.
 
 ## Git Workflow & Safety Guidelines
