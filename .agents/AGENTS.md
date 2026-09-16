@@ -18,11 +18,25 @@ RetrievLab compares **retrieval strategies**, not duplicate implementations.
 
 > **Guiding Principle**: Implement algorithms once. Explore behavior through configuration. Validate improvements through experiments.
 
+## User Interaction & Implementation Rule
+
+- **Mandatory Approval Before Writing Code**: Never write or modify non-test code (features, data loaders, algorithms, experiments, models) without showing the proposed implementation first and obtaining explicit user approval.
+- **Exception for Test Cases**: Writing, updating, or running unit test cases (`tests/test_*.py`) to verify functionality is exempt from requiring prior approval.
+- **Propose & Show First**: Present a clear breakdown of the proposed sub-steps, classes, and file paths before asking for approval.
+- **Granular Execution**: Break complex tasks into small, bite-sized sub-steps so the user can easily track progress.
+
 ## Git Workflow & Safety Guidelines
 
 - **Guiding Light**: Preserve First $\rightarrow$ Inspect Second $\rightarrow$ Propose Third $\rightarrow$ Ask Fourth $\rightarrow$ Change Last.
 - **Granular Commits**: Commit individual files/units one-by-one using RLB semantic prefixes (`feat`, `exp`, `eval`, `docs`, `fix`, `test`, `perf`, `chore`).
 - **Push at the End**: Defer `git push` until all individual local commits are completed and verified.
 - **PowerShell Syntax**: Always use `;` or separate commands on Windows PowerShell; avoid `&&`.
+
+## Research Experiment Reporting Guidelines
+
+- **8-Part Research Schema**: All reports in `results/` must adhere strictly to the 8-part empirical research structure (`.agents/rules/experiment-reports.md`).
+- **Data-Driven Prose**: Never hard-code subjective outcomes or biased conclusions in report generators; always state exact measured deltas.
+- **Explicit Metric Labeling**: Always specify the exact metric used for diagnostics and complementarity analysis.
+
 
 

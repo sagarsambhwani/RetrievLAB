@@ -8,6 +8,9 @@ class RetrieverEvaluationResult(BaseModel):
     recall_at_k: float
     precision_at_k: float
     mrr: float
+    ndcg_at_k: float = 0.0
+    map_at_k: float = 0.0
+    hit_at_k: float = 0.0
     k: int = 5
     num_cases: int = 0
 
@@ -29,14 +32,22 @@ class EvaluationReport(BaseModel):
         """Render the evaluation results as a formatted Markdown table.
 
         Returns:
-            A Markdown table string displaying Retriever, Recall@K, MRR, and Precision@K.
+            A Markdown table string displaying Retriever, Recall@K, MRR, Precision@K, nDCG@K, and MAP@K.
         """
         if not self.results:
             return "No evaluation results available."
 
         k_val = self.results[0].k if self.results else 5
 
-        headers = ["Retriever", f"Recall@{k_val}", "MRR", f"Precision@{k_val}"]
+        headers = [
+            "Retriever",
+            f"Recall@{k_val}",
+            "MRR",
+            f"Precision@{k_val}",
+            f"nDCG@{k_val}",
+            f"MAP@{k_val}",
+            f"Hit@{k_val}",
+        ]
         lines = [
             f"| {' | '.join(headers)} |",
             f"| {' | '.join([':---'] + [':---:'] * (len(headers) - 1))} |",
@@ -48,6 +59,9 @@ class EvaluationReport(BaseModel):
                 f"{res.recall_at_k:.4f}",
                 f"{res.mrr:.4f}",
                 f"{res.precision_at_k:.4f}",
+                f"{res.ndcg_at_k:.4f}",
+                f"{res.map_at_k:.4f}",
+                f"{res.hit_at_k:.4f}",
             ]
             lines.append(f"| {' | '.join(row)} |")
 

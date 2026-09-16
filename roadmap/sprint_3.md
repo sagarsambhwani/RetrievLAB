@@ -47,18 +47,22 @@ Integrate standardized, multi-domain evaluation datasets from the BEIR benchmark
 Implement an automated loader and caching layer for BEIR datasets, supporting standardized document schemas, queries, and graded relevance assessments (`qrels`).
 
 ### Tasks
-- [ ] Implement `BEIRLoader` in `retrievlab.ingestion.beir` (download, parse, cache)
-- [ ] Support `SciFact` (scientific claim verification, ~5K docs)
-- [ ] Support `NFCorpus` (biomedical search, ~3.6K docs)
-- [ ] Support `FiQA` (financial question answering, ~57K docs)
-- [ ] Map BEIR corpora into standard `Chunk` and `BenchmarkCase` schemas
+- [x] Implement `BEIRLoader` in `retrievlab.ingestion.beir` (download, parse, cache)
+- [x] Support `SciFact` (scientific claim verification, ~5K docs)
+- [x] Support `NFCorpus` (biomedical search, ~3.6K docs)
+- [x] Support `FiQA` (financial question answering, ~57K docs)
+- [x] Map BEIR corpora into standard `Chunk` and `BenchmarkCase` schemas
+- [x] Unit test suite in `tests/test_beir.py` (5 unit tests passing)
 
 ---
 
 ## 🎟️ RLB-301 — Out-of-Domain Generalization Benchmark
 
 ### Description
-Evaluate baseline BM25, FAISS Dense, and Hybrid (RRF) retrievers across all three BEIR domains.
+Evaluate baseline BM25, FAISS Dense, and Hybrid (RRF) retrievers across BEIR domains.
+
+### Tasks
+- [x] Experiment 021: Evaluate BM25, FAISS Dense, and Hybrid (RRF 1:1, 1:2) on BEIR SciFact (`results/sprint_3/exp021_beir_scifact_baselines.md`)
 
 ### Research Question
 > How do lexical, dense, and hybrid retrieval strategies generalize when tested on specialized out-of-domain corpora (Biomedical vs Scientific vs Financial)?
@@ -76,12 +80,13 @@ Formalize the first-stage retrieval phase as a dedicated `CandidateGenerator` pr
 ## 🎟️ RLB-310 — Candidate Generator & Candidate Pool Abstraction
 
 ### Description
-Design and implement `CandidateGenerator` and `CandidatePool` in `retrievlab.selection.candidate`.
+Design and implement `CandidateGenerator` and `CandidatePool` in `retrievlab.selection`.
 
 ### Tasks
-- [ ] Define `CandidateGenerator` abstract base class
-- [ ] Define `CandidatePool` data structure (holding candidate chunks, initial retrieval ranks, and per-retriever raw scores)
-- [ ] Implement `MultiRetrieverCandidateGenerator` (unioning candidates from BM25 + FAISS Dense)
+- [x] Define `CandidateGenerator` abstract base class in `retrievlab.selection.interface`
+- [x] Define `Candidate` and `CandidatePool` data models tracking retriever scores, ranks, and sources in `retrievlab.selection.candidate`
+- [x] Implement `MultiRetrieverCandidateGenerator` and `SingleRetrieverCandidateGenerator` in `retrievlab.selection.generator`
+- [x] Unit test suite in `tests/test_candidate_selection.py` (7 unit tests passing)
 
 ---
 
@@ -187,9 +192,10 @@ Expand the evaluation suite with graded relevance metrics and produce the compre
 
 ### Description
 Implement graded ranking metrics in `retrievlab.evaluation.metrics`:
-- [ ] `ndcg_at_k(retrieved_results, qrels, k=10)` (Normalized Discounted Cumulative Gain)
-- [ ] `map_at_k(retrieved_results, qrels, k=10)` (Mean Average Precision)
-- [ ] `hit_at_k(retrieved_results, qrels, k=10)`
+- [x] `hit_at_k(retrieved_results, expected_results, k=None, min_grade=1)`
+- [x] `ndcg_at_k(retrieved_results, expected_results, k=None)` (Normalized Discounted Cumulative Gain)
+- [x] `average_precision_at_k(retrieved_results, expected_results, k=None, min_grade=1)` (Mean Average Precision)
+- [x] Unit test suite in `tests/test_metrics.py` (10 unit tests passing)
 
 ---
 

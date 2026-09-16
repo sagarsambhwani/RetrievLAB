@@ -23,8 +23,8 @@ def test_evaluate_retriever():
 
     retriever = DummyRetriever()
 
-    # k=1: for q1 -> retrieves [c1] -> recall=1.0, prec=1.0, mrr=1.0
-    #      for q2 -> retrieves [c1] -> recall=0.0, prec=0.0, mrr=0.0
+    # k=1: for q1 -> retrieves [c1] -> recall=1.0, prec=1.0, mrr=1.0, ndcg=1.0, map=1.0, hit=1.0
+    #      for q2 -> retrieves [c1] -> recall=0.0, prec=0.0, mrr=0.0, ndcg=0.0, map=0.0, hit=0.0
     result = evaluate_retriever(retriever, benchmark, chunks, k=1, retriever_name="Dummy")
 
     assert isinstance(result, RetrieverEvaluationResult)
@@ -34,6 +34,9 @@ def test_evaluate_retriever():
     assert result.recall_at_k == 0.5
     assert result.precision_at_k == 0.5
     assert result.mrr == 0.5
+    assert result.ndcg_at_k == 0.5
+    assert result.map_at_k == 0.5
+    assert result.hit_at_k == 0.5
 
 
 def test_evaluate_retriever_empty_benchmark():
@@ -43,3 +46,6 @@ def test_evaluate_retriever_empty_benchmark():
     assert result.num_cases == 0
     assert result.recall_at_k == 0.0
     assert result.mrr == 0.0
+    assert result.ndcg_at_k == 0.0
+    assert result.map_at_k == 0.0
+    assert result.hit_at_k == 0.0
