@@ -15,8 +15,10 @@ dependencies = [
     "qdrant-client>=1.18.0",
     "rich>=15.0.0",
     "sentence-transformers>=5.6.0",
+    "torch>=2.6.0",
     "typer>=0.25.1",
 ]
+
 
 [dependency-groups]
 dev = [
@@ -41,6 +43,15 @@ warn_unused_configs = true
 [[tool.mypy.overrides]]
 module = ["nltk.*", "faiss.*"]
 ignore_missing_imports = true
+
+[tool.uv.sources]
+torch = [{ index = "pytorch-cu124" }]
+torchvision = [{ index = "pytorch-cu124" }]
+
+[[tool.uv.index]]
+name = "pytorch-cu124"
+url = "https://download.pytorch.org/whl/cu124"
+explicit = true
 
 
 
