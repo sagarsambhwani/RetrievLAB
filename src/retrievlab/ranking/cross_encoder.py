@@ -24,6 +24,7 @@ class CrossEncoderReRanker(ReRanker):
         self,
         model_name: str = DEFAULT_MODEL,
         batch_size: int = 32,
+        max_length: int = 256,
         device: str | None = None,
         model_kwargs: dict[str, Any] | None = None,
     ) -> None:
@@ -33,16 +34,19 @@ class CrossEncoderReRanker(ReRanker):
             model_name: HuggingFace model hub ID or local path.
                         Defaults to 'cross-encoder/ms-marco-MiniLM-L-6-v2'.
             batch_size: Batch size for model inference. Defaults to 32.
+            max_length: Maximum sequence length for tokenization. Defaults to 256.
             device: Device to load the model on ('cpu', 'cuda', etc.). Defaults to auto-detect.
             model_kwargs: Additional keyword arguments passed to CrossEncoder.
         """
         self.model_name = model_name
         self.batch_size = batch_size
+        self.max_length = max_length
         self.device = device
 
         kwargs: dict[str, Any] = model_kwargs or {}
         if device is not None:
             kwargs["device"] = device
+        kwargs["max_length"] = max_length
 
         self.model = CrossEncoder(model_name, **kwargs)
 
