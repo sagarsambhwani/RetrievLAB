@@ -45,5 +45,11 @@ RetrievLab compares **retrieval strategies**, not duplicate implementations.
 - **Offload to GPU**: Route neural models to dedicated GPU VRAM to protect system RAM.
 - **Batch & Bound**: Micro-batch tensors, enforce sequence length limits (`max_length <= 256`), and cache heavy neural outputs to disk.
 
+## Code Quality & Linter Invariants
+
+- **Zero Lint Policy**: Every file must pass `uv run ruff check .` with zero errors and zero warnings before completing tasks or committing. Follow `.agents/rules/code-quality.md`.
+- **F-String Invariant (F541)**: Never prefix a string with `f` unless it contains `{}` variable or expression placeholders. Use standard strings for static titles, prints, and headers.
+- **No Dead Code (F401, F841)**: Never leave unused imports or dead local variable assignments.
+
 
 
