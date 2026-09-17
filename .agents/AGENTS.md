@@ -34,6 +34,7 @@ RetrievLab compares **retrieval strategies**, not duplicate implementations.
 
 ## Research Experiment Reporting Guidelines
 
+- **Results-First Invariant**: Never write or draft research reports before the experiment script has completed execution and generated actual verified benchmark numbers.
 - **8-Part Research Schema**: All reports in `results/` must adhere strictly to the 8-part empirical research structure (`.agents/rules/experiment-reports.md`).
 - **Data-Driven Prose**: Never hard-code subjective outcomes or biased conclusions in report generators; always state exact measured deltas.
 - **Explicit Metric Labeling**: Always specify the exact metric used for diagnostics and complementarity analysis.

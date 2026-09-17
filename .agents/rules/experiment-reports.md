@@ -1,7 +1,8 @@
 # RetrievLab Research Experiment Report Specification
 
-## Core Rule
-All experiment results generated in `results/sprint_*/` must adhere strictly to the **8-Part Empirical Research Schema**.
+## Core Rules
+1. **Results-First Invariant**: **Never write or draft report files before benchmark results are generated.** All report documents in `results/` must only be created *after* the experiment script has executed to completion, printed raw benchmark measurements, and confirmed validity. Speculative conclusions, placeholder numbers, or pre-authored reports are strictly forbidden.
+2. **Schema Adherence**: All experiment results generated in `results/sprint_*/` must adhere strictly to the **8-Part Empirical Research Schema**.
 
 ---
 
@@ -9,6 +10,7 @@ All experiment results generated in `results/sprint_*/` must adhere strictly to 
 1. **Data-Driven, Not Outcome-Driven**: Never hard-code subjective pre-judgments (e.g., avoid "significantly outperforming", "proving superior"). Always state exact measured values and deltas (e.g., *"Dense achieved 76.9% Recall@5 compared with 72.4% for BM25, a difference of +4.4 percentage points"*).
 2. **Explicit Labeling of Diagnostics**: Clearly state the exact metric basis for micro-analyses (e.g., *"Binary retrieval complementarity at K=5 (based on Hit@5)"*).
 3. **Reproducibility**: Experiment setup tables must define benchmark, corpus, location, and parameters completely.
+
 
 ---
 
