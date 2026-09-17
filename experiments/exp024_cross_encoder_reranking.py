@@ -12,7 +12,6 @@ Evaluates 6 systems on BEIR SciFact (300 test queries, 5,183 documents):
 Optimized with bulk batch inference across all candidate pools to complete in < 60s.
 """
 
-import sys
 import time
 from dataclasses import dataclass
 from pathlib import Path
@@ -158,7 +157,6 @@ def evaluate_two_stage(
     print(f"  Scoring {len(all_pairs)} total candidate pairs in bulk...", flush=True)
 
     # Step 3: Run single bulk predict pass
-    t_nn_start = time.perf_counter()
     all_scores = cross_encoder.model.predict(
         all_pairs,
         batch_size=cross_encoder.batch_size,
@@ -343,7 +341,7 @@ def run_experiment() -> None:
         else:
             ties += 1
 
-    print(f"\nQuery-Level Win/Loss Comparison on nDCG@5 (Two-Stage Union vs. Hybrid RRF):", flush=True)
+    print("\nQuery-Level Win/Loss Comparison on nDCG@5 (Two-Stage Union vs. Hybrid RRF):", flush=True)
     print(f"  Two-Stage Wins: {two_stage_wins} queries ({two_stage_wins/total_queries*100:.1f}%)", flush=True)
     print(f"  Hybrid RRF Wins:{rrf_wins} queries ({rrf_wins/total_queries*100:.1f}%)", flush=True)
     print(f"  Ties:           {ties} queries ({ties/total_queries*100:.1f}%)", flush=True)
