@@ -38,5 +38,12 @@ RetrievLab compares **retrieval strategies**, not duplicate implementations.
 - **Data-Driven Prose**: Never hard-code subjective outcomes or biased conclusions in report generators; always state exact measured deltas.
 - **Explicit Metric Labeling**: Always specify the exact metric used for diagnostics and complementarity analysis.
 
+## System Hardware & Resource Protection Rule
+
+- **Hardware Profile**: 8 GB System RAM (tight), NVIDIA GeForce GTX 1650 (4 GB VRAM).
+- **Mandatory Safety Rule**: Never overwhelm system RAM. Follow `.agents/rules/system-resources.md`.
+- **Offload to GPU**: Route neural models to dedicated GPU VRAM to protect system RAM.
+- **Batch & Bound**: Micro-batch tensors, enforce sequence length limits (`max_length <= 256`), and cache heavy neural outputs to disk.
+
 
 
