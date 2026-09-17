@@ -135,7 +135,7 @@ def evaluate_cross_encoder_stage(
 
     pools = []
     for case in benchmark_cases:
-        pool = generator.generate(case.query, chunks=chunks)
+        pool = generator.generate(case.query, top_k_per_retriever=50, chunks=chunks)
         pools.append(pool)
 
     t_pools = time.perf_counter()
@@ -223,7 +223,7 @@ def evaluate_lightgbm_stage(
 
     for case in benchmark_cases:
         t0 = time.perf_counter()
-        pool = generator.generate(case.query, chunks=chunks)
+        pool = generator.generate(case.query, top_k_per_retriever=50, chunks=chunks)
         t_gen = time.perf_counter()
 
         results = lgb_ranker.rerank(case.query, pool, top_k=10)
@@ -292,7 +292,7 @@ def get_or_build_train_dataset(
     for i, case in enumerate(train_cases):
         if (i + 1) % 100 == 0 or i == len(train_cases) - 1:
             print(f"  Processed {i + 1}/{len(train_cases)} train query pools...", flush=True)
-        pool = generator.generate(case.query, chunks=chunks)
+        pool = generator.generate(case.query, top_k_per_retriever=50, chunks=chunks)
         train_pools.append(pool)
 
     print(f"Candidate pools generated in {(time.perf_counter() - t0):.1f}s. Building LTRDataset...", flush=True)
@@ -339,19 +339,15 @@ def run_experiment() -> None:
     print("Building FAISS index...", flush=True)
     client = FastEmbedClient()
     faiss_retriever = FAISSRetriever(client=client)
-    faiss_retriever.index(chunks)
 
     print("Initializing Hybrid RRF (1:2)...", flush=True)
     hybrid_rrf = HybridRetriever(
-        bm25,
-        faiss_retriever,
-        strategy="rrf",
-        weights={"bm25": 1.0, "dense": 2.0},
+        retrievers=[bm25, faiss_retriever],
+        weights=[1.0, 2.0],
     )
 
     generator = MultiRetrieverCandidateGenerator(
-        retrievers=[bm25, faiss_retriever],
-        top_k_per_retriever=50,
+        retrievers={"bm25": bm25, "dense": faiss_retriever}
     )
     extractor = FeatureExtractor()
 
