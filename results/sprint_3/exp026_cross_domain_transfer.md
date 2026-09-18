@@ -16,7 +16,7 @@ Experiment 026 evaluates the **cross-domain transferability** of learned ranking
 4. The **Candidate Pool Recall Ceiling** to disentangle Stage-1 retrieval limits from Stage-2 ranking errors.
 
 ### Primary Measured Findings
-- **Zero-Shot Robustness**: The SciFact-trained LightGBM transferred effectively zero-shot to NFCorpus, achieving **`nDCG@5 = 0.3784`** and **`Recall@5 = 0.1346`**. It surpassed Single-Stage BM25 (`0.3392`) and Single-Stage FAISS Dense (`0.3713`), capturing **44.6% of the theoretical candidate ceiling** without any domain adaptation.
+- **Zero-Shot Robustness**: The SciFact-trained LightGBM transferred effectively zero-shot to NFCorpus, achieving **`nDCG@5 = 0.3784`** and **`Recall@5 = 0.1346`**. It surpassed Single-Stage BM25 (`0.3392`) and Single-Stage FAISS Dense (`0.3713`), achieving **44.6% of the measured candidate-pool recall ceiling** without any domain adaptation.
 - **Domain-Transfer Penalty**: Comparing the in-domain retrained LightGBM against the zero-shot SciFact model revealed a measurable domain-transfer penalty of **$\Delta_{\text{nDCG@5}} = +0.0143$ (+3.8%)** and **$\Delta_{\text{Recall@5}} = +0.0081$ (+6.0%)**.
 - **In-Domain Retraining Dominance**: Retraining LightGBM on 1,000 NFCorpus train queries required **1.12 seconds on CPU**, elevating nDCG@5 to **`0.3927`** and Recall@5 to **`0.1427`** (47.2% of ceiling). This outperformed all six systems, including the zero-shot neural Cross-Encoder (`0.3885`) and Hybrid RRF (`0.3830`).
 - **30× Serving Speedup**: Pure LightGBM re-ranking executed in **`35.9 ms/query`** on CPU (total serving latency `60.8 ms`), operating **30× faster** than the GPU-accelerated Cross-Encoder (`1,816.6 ms/query`).
@@ -108,8 +108,8 @@ $$\Delta_{\text{transfer}} = \text{Metric}(\text{In-Domain NFCorpus Model}) - \t
 | **Recall@10** | 0.1622 | **0.1779** | **+0.0157** | **+9.7%** |
 
 ### Insights on the Penalty
-1. **The Cost of Domain Shift**: Cross-domain transfer cost ~3.8% in nDCG@5 and ~6.0% in Recall@5. The learned ranking policy did not collapse, but degraded moderately.
-2. **Cheap Recovery**: Because LightGBM fits on 89,073 rows in **1.12 seconds on CPU**, this penalty can be entirely eliminated in any production scenario where a small sample of domain interaction data is available.
+1. **Measured Cost of Domain Shift on NFCorpus**: Cross-domain transfer cost ~3.8% in nDCG@5 and ~6.0% in Recall@5. The learned ranking policy did not collapse, but degraded moderately.
+2. **Cheap Recovery**: In this experiment, in-domain retraining recovered the observed transfer gap using 1.12 seconds of CPU training.
 
 ---
 
@@ -145,8 +145,8 @@ Comparing the total split gain between the SciFact-trained model and the NFCorpu
 
 ## 7. Key Empirical Findings
 
-### Finding 1 — Learned GBDT Ranking Policies Transfer Successfully Zero-Shot
-A tabular LambdaMART model trained strictly on scientific abstracts transferred to layperson medical QA without collapsing, achieving `nDCG@5 = 0.3784` and outperforming single-stage lexical (`0.3392`) and dense (`0.3713`) baselines.
+### Finding 1 — The SciFact-trained GBDT Ranking Policy Transfers to NFCorpus Without Collapsing
+A tabular LambdaMART model trained strictly on scientific abstracts transferred to NFCorpus without collapsing, achieving `nDCG@5 = 0.3784` and remaining above the single-stage BM25 and Dense baselines.
 
 ### Finding 2 — The Domain-Transfer Penalty is Modest (~3.8% nDCG@5)
 The measured performance gap between an in-domain trained model and a zero-shot transferred model was **+0.0143 nDCG@5** (+3.8%) and **+0.0081 Recall@5** (+6.0%).
@@ -154,13 +154,13 @@ The measured performance gap between an in-domain trained model and a zero-shot 
 ### Finding 3 — In-Domain Retraining Provides the Highest Quality at 30× Lower Latency
 Retraining LightGBM directly on NFCorpus required **1.12 seconds on CPU** and reached **`nDCG@5 = 0.3927`**, outperforming the MS MARCO neural Cross-Encoder (`0.3885`) while serving queries in **`60.8 ms`** compared to **`1,816.6 ms`** on GPU.
 
-### Finding 4 — Feature Importance Dynamically Adapts to Query Structure
-When transferring between corpora, the tree model reweights feature families according to query style: exact phrase match and BM25 scores doubled in importance on short layperson queries, while `rrf_score` anchored relative ranking.
+### Finding 4 — Feature Gain Distribution Changes Across Domains
+The trained NFCorpus model exhibited a different feature-gain distribution from the SciFact model, including greater gain for `rrf_score`, `bm25_score`, and `exact_query_match`.
 
 ---
 
 ## 8. Strategic Recommendations for Production IR Pipelines
 
-1. **Deploy Tabular GBDTs for Zero-Shot Cold Starts**: If a new vertical or corpus lacks training queries, a GBDT trained on an adjacent corpus (e.g. SciFact) provides a robust zero-shot ranker that outperforms single-stage retrievers.
-2. **Trigger Instant Retraining Upon Gathering Initial Queries**: Because GBDT training on 89k candidate pairs takes **~1 second**, teams should retrain the ranker in-domain as soon as a small batch of click logs or judgment queries (~500–1000) becomes available to eliminate the ~3.8% domain-transfer penalty.
-3. **Always Bound Candidate Depth ($K_{\text{cand}}=50$)**: Measuring the candidate pool ceiling confirmed that 30.21% was the absolute ceiling on NFCorpus; re-rankers achieved 47.2% of that theoretical limit. To push recall further on broad multi-relevant datasets, Stage-1 candidate depth must be expanded (e.g. $K_{\text{cand}}=100$).
+1. **Evaluate Transferable GBDT Rankers for Cold Starts**: On NFCorpus, the SciFact-trained GBDT remained competitive with the single-stage baselines. Additional domains are required before generalizing this recommendation.
+2. **Trigger Instant Retraining Upon Gathering Initial Queries**: Because GBDT training on 89k candidate pairs takes **~1 second**, teams should retrain the ranker in-domain as soon as a small batch of click logs or judgment queries (~500–1000) becomes available to recover the observed ~3.8% nDCG@5 gap in this experiment.
+3. **Always Bound Candidate Depth ($K_{\text{cand}}=50$)**: Measuring the candidate pool ceiling confirmed that 30.21% was the absolute ceiling on NFCorpus; re-rankers achieved 47.2% of that measured ceiling. To push recall further on broad multi-relevant datasets, Stage-1 candidate depth must be expanded (e.g. $K_{\text{cand}}=100$).
