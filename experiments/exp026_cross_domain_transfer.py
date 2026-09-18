@@ -75,14 +75,24 @@ def get_or_compute_embeddings(
 
     print(f"Generating embeddings for {len(chunks)} NFCorpus chunks with FastEmbed...", flush=True)
     t0 = time.perf_counter()
-    embedded_chunks = client.embed_chunks(chunks, batch_size=256)
-    emb_list = [c.embedding for c in embedded_chunks if c.embedding is not None]
-    emb_matrix = np.array(emb_list, dtype=np.float32)
+    total = len(chunks)
+    dim = 384
+    batch_size = 128
+    emb_matrix = np.zeros((total, dim), dtype=np.float32)
+
+    for i in range(0, total, batch_size):
+        batch_chunks = chunks[i : i + batch_size]
+        batch_texts = [c.text or "" for c in batch_chunks]
+        batch_vecs = list(client.model.embed(batch_texts))
+        emb_matrix[i : i + len(batch_chunks)] = np.array(batch_vecs, dtype=np.float32)
 
     cache_path.parent.mkdir(parents=True, exist_ok=True)
     np.save(cache_path, emb_matrix)
+    for i, chunk in enumerate(chunks):
+        chunk.embedding = emb_matrix[i].tolist()
     print(f"Generated and cached {len(emb_matrix)} embeddings in {(time.perf_counter() - t0):.1f}s.", flush=True)
-    return embedded_chunks
+    return chunks
+
 
 
 def compute_candidate_pool_ceiling(
