@@ -34,9 +34,23 @@ RetrievLab compares **retrieval strategies**, not duplicate implementations.
 
 ## Research Experiment Reporting Guidelines
 
+- **Results-First Invariant**: Never write or draft research reports before the experiment script has completed execution and generated actual verified benchmark numbers.
 - **8-Part Research Schema**: All reports in `results/` must adhere strictly to the 8-part empirical research structure (`.agents/rules/experiment-reports.md`).
 - **Data-Driven Prose**: Never hard-code subjective outcomes or biased conclusions in report generators; always state exact measured deltas.
 - **Explicit Metric Labeling**: Always specify the exact metric used for diagnostics and complementarity analysis.
+
+## System Hardware & Resource Protection Rule
+
+- **Hardware Profile**: 8 GB System RAM (tight), NVIDIA GeForce GTX 1650 (4 GB VRAM).
+- **Mandatory Safety Rule**: Never overwhelm system RAM. Follow `.agents/rules/system-resources.md`.
+- **Offload to GPU**: Route neural models to dedicated GPU VRAM to protect system RAM.
+- **Batch & Bound**: Micro-batch tensors, enforce sequence length limits (`max_length <= 256`), and cache heavy neural outputs to disk.
+
+## Code Quality & Linter Invariants
+
+- **Zero Lint Policy**: Every file must pass `uv run ruff check .` with zero errors and zero warnings before completing tasks or committing. Follow `.agents/rules/code-quality.md`.
+- **F-String Invariant (F541)**: Never prefix a string with `f` unless it contains `{}` variable or expression placeholders. Use standard strings for static titles, prints, and headers.
+- **No Dead Code (F401, F841)**: Never leave unused imports or dead local variable assignments.
 
 
 
