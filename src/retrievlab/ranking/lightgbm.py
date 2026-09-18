@@ -107,8 +107,8 @@ class LightGBMRanker(ReRanker):
         eval_at = init_params.pop("eval_at", [5, 10])
         self.model = lgb.LGBMRanker(**init_params)
 
-        eval_set = None
-        eval_group = None
+        eval_set: Any = None
+        eval_group: Any = None
         if eval_dataset is not None and len(eval_dataset) > 0:
             eval_set = [(eval_dataset.features, eval_dataset.labels)]
             eval_group = [eval_dataset.group_sizes]
@@ -157,6 +157,7 @@ class LightGBMRanker(ReRanker):
         if not self.is_fitted or (self.model is None and self._booster is None):
             raise RuntimeError("LightGBMRanker must be fitted before calling rerank().")
 
+        raw_cands: list[Chunk | Candidate]
         if isinstance(candidates, CandidatePool):
             raw_cands = list(candidates.candidates)
         elif isinstance(candidates, Sequence):
