@@ -62,11 +62,13 @@ class CrossEncoderReRanker(ReRanker):
         for item in candidates:
             if isinstance(item, Candidate):
                 chunks.append(item.chunk)
+            elif isinstance(item, SearchResult):
+                chunks.append(item.chunk)
             elif isinstance(item, Chunk):
                 chunks.append(item)
             else:
                 raise TypeError(
-                    f"Expected Chunk, Candidate, or CandidatePool, got {type(item).__name__}"
+                    f"Expected Chunk, Candidate, SearchResult, or CandidatePool, got {type(item).__name__}"
                 )
         return chunks
 
