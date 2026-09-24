@@ -111,7 +111,7 @@ Adaptive LTR (Dynamic Routing)
 - [ ] **48. Large candidate pool → LightGBM:** $K=200$ pool filtered down to top 10 using tabular GBDT.
 - [ ] **49. Large candidate pool → Cross-Encoder:** $K=200$ pool passed directly to GPU cross-attention.
 - [ ] **50. Multi-retriever → LightGBM:** 3-way candidate pool (BM25 + Dense + Sparse) feeding LightGBM.
-- [ ] **51. LightGBM → Cross-Encoder cascade:** Union $K=100 \xrightarrow{\text{LightGBM}} \text{Top 15} \xrightarrow{\text{Cross-Encoder}} \text{Final Top 5}$.
+- [x] **51. LightGBM → Cross-Encoder cascade:** Union $K=50 \xrightarrow{\text{LightGBM}} \text{Top 10..30} \xrightarrow{\text{Cross-Encoder}} \text{Final Top 10}$ (`Exp 027`).
 - [ ] **52. Retriever → adaptive reranker:** Routing easy queries to LightGBM and hard queries to Cross-Encoder.
 
 ---
