@@ -95,5 +95,5 @@ def test_rerank_empty_candidates(ranker: CrossEncoderReRanker) -> None:
 
 
 def test_rerank_invalid_type_raises(ranker: CrossEncoderReRanker) -> None:
-    with pytest.raises(TypeError, match="Expected Chunk, Candidate, or CandidatePool"):
+    with pytest.raises(TypeError, match="Expected Chunk, Candidate, SearchResult, or CandidatePool"):
         ranker.rerank("Query", candidates=["invalid_string_candidate"])  # type: ignore[list-item]
