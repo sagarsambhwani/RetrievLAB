@@ -86,7 +86,7 @@ Adaptive LTR (Dynamic Routing)
 *Research Question: What information actually makes a good ranking decision?*
 
 - [x] **31. Cross-Encoder model comparison:** Evaluating MS MARCO MiniLM cross-encoders (`cross-encoder/ms-marco-MiniLM-L-6-v2`).
-- [ ] **32. Small vs. large Cross-Encoder:** MiniLM-L6 (22M params) vs MiniLM-L12 (33M params) vs DeBERTa-v3.
+- [x] **32. Small vs. large Cross-Encoder:** MiniLM-L6 (22M params) vs BGE-Reranker-Base (110M params) (`Exp 028`).
 - [ ] **33. Domain-specific Cross-Encoder:** Bio-Cross-Encoder fine-tuned on scientific claim verification.
 - [x] **34. LightGBM hyperparameter sweep:** Tree depth, learning rate, num_leaves ($15, 31, 63$), and min_child_samples.
 - [ ] **35. Feature ablation:** Systematically stripping feature groups (Lexical vs Dense vs Fusion vs Metadata).
