@@ -121,7 +121,7 @@ Adaptive LTR (Dynamic Routing)
 
 - [x] **53. SciFact:** Scientific claim verification (~5k abstracts, formal academic queries).
 - [x] **54. NFCorpus:** Nutrition & medical QA (~3.6k abstracts, layperson conversational queries).
-- [ ] **55. FiQA:** Financial opinion QA (~57k documents, technical financial terminology).
+- [x] **55. FiQA:** Financial opinion QA (~57k documents, technical financial terminology) (`Exp 029`).
 - [ ] **56. SCIDOCS:** Scientific paper citations and co-readership graphs.
 - [ ] **57. HotpotQA:** Multi-hop reasoning and multi-document synthesis.
 - [ ] **58. Robust04 / TREC:** News articles with long traditional keyword queries.
@@ -132,7 +132,7 @@ Adaptive LTR (Dynamic Routing)
 *Research Question: What parts of the learned ranking policy transfer?*
 
 - [x] **59. SciFact → NFCorpus:** Evaluating zero-shot transfer of scientific GBDT ranker to layperson medical search (`Exp 026`).
-- [ ] **60. SciFact → FiQA:** Evaluating transfer from scientific verification to financial QA.
+- [x] **60. SciFact → FiQA:** Evaluating transfer from scientific verification to financial QA (`Exp 029`).
 - [ ] **61. NFCorpus → SciFact:** Reverse-transferring a layperson-trained model to academic literature.
 - [ ] **62. Combined-domain training:** Pooling training sets from SciFact + NFCorpus to train a generalized tabular ranker.
 - [x] **63. Zero-shot vs. in-domain LTR:** Quantifying the performance recovery from 1 second of in-domain CPU retraining.
