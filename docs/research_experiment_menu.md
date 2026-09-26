@@ -89,6 +89,7 @@ Adaptive LTR (Dynamic Routing)
 - [x] **32. Small vs. large Cross-Encoder:** MiniLM-L6 (22M params) vs BGE-Reranker-Base (110M params) (`Exp 028`).
 - [ ] **33. Domain-specific Cross-Encoder:** Bio-Cross-Encoder fine-tuned on scientific claim verification.
 - [x] **34. LightGBM hyperparameter sweep:** Tree depth, learning rate, num_leaves ($15, 31, 63$), and min_child_samples.
+- [x] **34b. GBDT Engine Benchmark:** LightGBM vs. XGBoost (pairwise vs. listwise nDCG, leaf-wise vs. depth-wise tree growth) (`Exp 031`).
 - [x] **35. Feature ablation:** Systematically stripping feature groups (Lexical vs Dense vs Fusion vs Metadata) (`Exp 030`).
 - [x] **36. Feature pruning:** Dropping zero-gain features (text metadata) to reduce extraction latency (`Exp 030`).
 - [x] **37. Rank-only LightGBM:** Training strictly on ordinal rank positions ($1/r_{\text{bm25}}, 1/r_{\text{dense}}, \text{rrf}$) without raw similarity scores (`Exp 030`).
