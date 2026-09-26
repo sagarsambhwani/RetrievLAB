@@ -41,6 +41,7 @@ class FeatureExtractor:
         self,
         missing_rank: int = 1000,
         rrf_k: int = 60,
+        feature_names: list[str] | None = None,
     ) -> None:
         """Initialize FeatureExtractor.
 
@@ -48,18 +49,27 @@ class FeatureExtractor:
             missing_rank: Default 1-indexed rank assigned when a candidate was
                           not retrieved by a specific modality. Defaults to 1000.
             rrf_k: Smoothing constant k for RRF calculations. Defaults to 60.
+            feature_names: Optional custom subset of feature names to extract.
+                           If None, extracts all 16 default features in FEATURE_NAMES.
         """
         self.missing_rank = missing_rank
         self.rrf_k = rrf_k
         self._word_regex = re.compile(r"\w+")
+        if feature_names is not None:
+            invalid = [f for f in feature_names if f not in self.FEATURE_NAMES]
+            if invalid:
+                raise ValueError(f"Invalid feature names: {invalid}. Must be in {self.FEATURE_NAMES}")
+            self.feature_names = list(feature_names)
+        else:
+            self.feature_names = list(self.FEATURE_NAMES)
 
     def get_feature_names(self) -> list[str]:
-        """Return the stable, ordered list of feature names.
+        """Return the stable, ordered list of configured feature names.
 
         Returns:
-            List of 16 string feature names.
+            List of string feature names.
         """
-        return list(self.FEATURE_NAMES)
+        return list(self.feature_names)
 
     def _tokenize(self, text: str) -> list[str]:
         """Tokenize text into lowercase alphanumeric words."""
@@ -185,9 +195,9 @@ class FeatureExtractor:
             2D numpy array of shape (len(pool), len(FEATURE_NAMES)).
         """
         if not pool.candidates:
-            return np.empty((0, len(self.FEATURE_NAMES)), dtype=np.float64)
+            return np.empty((0, len(self.feature_names)), dtype=np.float64)
 
-        names = self.FEATURE_NAMES
+        names = self.feature_names
         rows: list[list[float]] = []
         for cand in pool.candidates:
             feat_dict = self.extract_candidate_features(pool.query, cand)
