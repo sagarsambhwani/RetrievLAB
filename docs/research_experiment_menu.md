@@ -89,10 +89,10 @@ Adaptive LTR (Dynamic Routing)
 - [x] **32. Small vs. large Cross-Encoder:** MiniLM-L6 (22M params) vs BGE-Reranker-Base (110M params) (`Exp 028`).
 - [ ] **33. Domain-specific Cross-Encoder:** Bio-Cross-Encoder fine-tuned on scientific claim verification.
 - [x] **34. LightGBM hyperparameter sweep:** Tree depth, learning rate, num_leaves ($15, 31, 63$), and min_child_samples.
-- [ ] **35. Feature ablation:** Systematically stripping feature groups (Lexical vs Dense vs Fusion vs Metadata).
-- [ ] **36. Feature pruning:** Dropping zero-gain features (`retrieved_by_both`) to reduce extraction latency.
-- [ ] **37. Rank-only LightGBM:** Training strictly on ordinal rank positions ($1/r_{\text{bm25}}, 1/r_{\text{dense}}, \text{rrf}$) without raw similarity scores.
-- [ ] **38. Score-only LightGBM:** Training strictly on uncalibrated raw scores ($\text{bm25\_score}, \text{dense\_score}$).
+- [x] **35. Feature ablation:** Systematically stripping feature groups (Lexical vs Dense vs Fusion vs Metadata) (`Exp 030`).
+- [x] **36. Feature pruning:** Dropping zero-gain features (text metadata) to reduce extraction latency (`Exp 030`).
+- [x] **37. Rank-only LightGBM:** Training strictly on ordinal rank positions ($1/r_{\text{bm25}}, 1/r_{\text{dense}}, \text{rrf}$) without raw similarity scores (`Exp 030`).
+- [x] **38. Score-only LightGBM:** Training strictly on uncalibrated raw scores ($\text{bm25\_score}, \text{dense\_score}$) (`Exp 030`).
 - [x] **39. Rank + score LightGBM:** Hybrid feature space combining raw scores, reciprocal ranks, and rank divergence (`Exp 025`).
 - [ ] **40. Query-difficulty features:** Query token entropy, query length, character length ratio, and punctuation presence.
 - [x] **41. Candidate-pool features:** Rank discrepancy ($|r_{\text{lex}} - r_{\text{dense}}|$), modality preference, and candidate pool position.
