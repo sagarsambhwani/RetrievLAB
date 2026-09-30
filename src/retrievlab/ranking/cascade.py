@@ -49,7 +49,7 @@ class CascadedReRanker(ReRanker):
     def rerank(
         self,
         query: str,
-        candidates: Union[CandidatePool, Sequence[Union[Chunk, Candidate, SearchResult]]],
+        candidates: Union[CandidatePool, Sequence[Union[Chunk, Candidate]]],
         top_k: int | None = None,
     ) -> list[SearchResult]:
         """Execute coarse-to-fine cascaded re-ranking.
