@@ -190,3 +190,23 @@ def test_build_ltr_dataset_length_mismatch() -> None:
 
     with pytest.raises(ValueError, match="Mismatched lengths"):
         build_ltr_dataset([pool], [case1, case2])
+
+
+def test_feature_extractor_custom_subset() -> None:
+    custom_names = ["bm25_score", "dense_score", "rrf_score"]
+    extractor = FeatureExtractor(feature_names=custom_names)
+    assert extractor.get_feature_names() == custom_names
+
+    chunk = Chunk(id="c1", document_id="doc1", text="Neural search text")
+    cand = Candidate(chunk=chunk, retriever_scores={"bm25": 4.5, "dense": 0.88})
+    pool = CandidatePool(query="Neural", candidates=[cand])
+
+    matrix = extractor.extract_matrix(pool)
+    assert matrix.shape == (1, 3)
+    assert matrix[0, 0] == 4.5
+    assert matrix[0, 1] == 0.88
+
+
+def test_feature_extractor_invalid_feature_name_raises() -> None:
+    with pytest.raises(ValueError, match="Invalid feature names"):
+        FeatureExtractor(feature_names=["invalid_feature_xyz"])
